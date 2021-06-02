@@ -3,14 +3,15 @@
 const jwt = require('jwt-simple');
 const moment = require('moment');
 const config = require('../config');
+const { DateTime } = require("luxon");
 
 const createToken = user =>{
-   
+    var now = DateTime.now();
     const payload = {
         sub: user.ID_USUARIO, //id publico del usuario o el propio.
         nombre_usuario: user.NOMBRE_USUARIO,
-        iat: moment().unix() , // fecha de creación del token. params vacíos los crea hoy.
-        exp: moment().add(14,'days').unix(), // fecha de expiración del token.
+        iat: now , // fecha de creación del token. params vacíos los crea hoy.
+        exp: now.plus({days: 7}), // fecha de expiración del token.
     }
 
     return jwt.encode(payload, config.SECRET_TOKEN);

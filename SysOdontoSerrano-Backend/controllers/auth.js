@@ -79,7 +79,7 @@ const usuario_registrado=async (req,res)=>{
 
 const signIn = async(req, res) =>{
     let { correo_electronico, contrasenia} = req.body;
-    console.log(correo_electronico);
+    console.log(correo_electronico, "y: ",contrasenia);
     try{
         const usuario = await Entity.tbl_n_usuario.findOne({
             where:{
@@ -90,12 +90,23 @@ const signIn = async(req, res) =>{
         console.log("Usuario", usuario);
         if(usuario != null)
         {
-            
-            console.log(auth_service)
+            //VERIFICANDO LA CONTRASEÑA
+
+            let valida =await usuario.validPassword(contrasenia);
+            console.log("valido: ",valida);
+
+            if(valida)
+            {
+                console.log(auth_service)
     
             let token= auth_service.createToken(usuario);
     
             res.status(200).send({token});
+            }
+            else{
+                res.status(401).send({message:"Credenciales no válidas."});
+            }
+            
         }
         else{
             res.status(401).send({message:"Credenciales no válidas."});

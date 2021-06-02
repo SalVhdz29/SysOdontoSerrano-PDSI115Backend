@@ -1,23 +1,27 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('tbl_n_tipo_recurso', {
-    ID_TIPO_RECURSO: {
+  return sequelize.define('tbl_n_persona', {
+    ID_PERSONA: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    NOMBRE_TIPO_RECURSO: {
+    NOMBRE_PERSONA: {
       type: DataTypes.STRING(30),
       allowNull: false
     },
-    TIPO_RECURSO_ACTIVO: {
-      type: DataTypes.BOOLEAN,
+    APELLIDO_PERSONA: {
+      type: DataTypes.STRING(30),
+      allowNull: false
+    },
+    FECHA_NACIMIENTO: {
+      type: DataTypes.DATEONLY,
       allowNull: false
     }
   }, {
     sequelize,
-    tableName: 'tbl_n_tipo_recurso',
+    tableName: 'tbl_n_persona',
     timestamps: false,
     indexes: [
       {
@@ -25,7 +29,7 @@ module.exports = function(sequelize, DataTypes) {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "ID_TIPO_RECURSO" },
+          { name: "ID_PERSONA" },
         ]
       },
     ]

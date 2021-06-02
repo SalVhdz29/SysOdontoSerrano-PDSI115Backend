@@ -3,6 +3,7 @@
 const jwt = require('jwt-simple');
 const moment = require('moment')
 const config = require('../config')
+const { DateTime } = require("luxon");
 
 //Conexión a BD.
 const {sequelize} = require('../models/index.js');
@@ -22,8 +23,9 @@ const _isAuth=async(req, res, next)=>{
     const token = req.headers.authorization.split(' ')[1]; // esto es porque authorization incluye un texto llamado Bearer token, entonces nos quedamos con el elemento luego del espacio, eltoken.
 
     const payload = jwt.decode(token, config.SECRET_TOKEN);
+    let now = DateTime.now();
     
-    if(payload.exp <= moment().unix()) // si la fecha de caducado es menor a la fecha actual.
+    if(payload.exp <=now) // si la fecha de caducado es menor a la fecha actual.
     {
         return res.status(401).send({ message: 'El token ha expirado'});
 

@@ -1,31 +1,27 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('tbl_n_rol', {
-    ID_ROL: {
+  return sequelize.define('tbl_n_expediente', {
+    ID_EXPEDIENTE: {
+      autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true,
-      references: {
-        model: 'tbl_n_usuario',
-        key: 'ID_USUARIO'
-      }
+      primaryKey: true
     },
-    ID_USUARIO: {
+    ID_PACIENTE: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      primaryKey: true,
+      allowNull: true,
       references: {
-        model: 'tbl_n_usuario',
-        key: 'ID_USUARIO'
+        model: 'tbl_n_paciente',
+        key: 'ID_PACIENTE'
       }
     },
-    ROL_USUARIO_ACTIVO: {
-      type: DataTypes.BOOLEAN,
+    FECHA_CREACION_EXPEDIENTE: {
+      type: DataTypes.DATEONLY,
       allowNull: false
     }
   }, {
     sequelize,
-    tableName: 'tbl_n_rol',
+    tableName: 'tbl_n_expediente',
     timestamps: false,
     indexes: [
       {
@@ -33,15 +29,14 @@ module.exports = function(sequelize, DataTypes) {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "ID_ROL" },
-          { name: "ID_USUARIO" },
+          { name: "ID_EXPEDIENTE" },
         ]
       },
       {
-        name: "FK_TBL_N_ROL2",
+        name: "FK_REGISTRA_UN_EXPEDIENTE",
         using: "BTREE",
         fields: [
-          { name: "ID_USUARIO" },
+          { name: "ID_PACIENTE" },
         ]
       },
     ]

@@ -1,43 +1,39 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('tbl_n_recurso', {
-    ID_RECURSO: {
+  return sequelize.define('tbl_n_empleado', {
+    ID_EMPLEADO: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    ID_TIPO_RECURSO: {
+    ID_PERSONA: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
-        model: 'tbl_n_tipo_recurso',
-        key: 'ID_TIPO_RECURSO'
+        model: 'tbl_n_persona',
+        key: 'ID_PERSONA'
       }
     },
-    NOMBRE_RECURSO: {
-      type: DataTypes.STRING(30),
-      allowNull: false
-    },
-    DESCRIPCION_RECURSO: {
-      type: DataTypes.STRING(200),
-      allowNull: false
-    },
-    FECHA_CREACION_RECURSO: {
+    FECHA_INGRESO: {
       type: DataTypes.DATEONLY,
       allowNull: false
     },
-    FECHA_MODIFICACION_RECURSO: {
+    SALARIO: {
+      type: DataTypes.DECIMAL(2,0),
+      allowNull: false
+    },
+    FECHA_BAJA: {
       type: DataTypes.DATEONLY,
       allowNull: false
     },
-    RECURSO_ACTIVO: {
+    EMPLEADO_ACTIVO: {
       type: DataTypes.BOOLEAN,
       allowNull: false
     }
   }, {
     sequelize,
-    tableName: 'tbl_n_recurso',
+    tableName: 'tbl_n_empleado',
     timestamps: false,
     indexes: [
       {
@@ -45,14 +41,14 @@ module.exports = function(sequelize, DataTypes) {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "ID_RECURSO" },
+          { name: "ID_EMPLEADO" },
         ]
       },
       {
-        name: "FK_ES_UN",
+        name: "FK_SUS_DATOS_DE",
         using: "BTREE",
         fields: [
-          { name: "ID_TIPO_RECURSO" },
+          { name: "ID_PERSONA" },
         ]
       },
     ]
