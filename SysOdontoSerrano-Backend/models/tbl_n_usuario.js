@@ -90,6 +90,16 @@ module.exports = function(sequelize, DataTypes) {
 }
 
 tbl_n_usuario.prototype.validPassword=function(password) {
+  let hash = bcrypt.hash(password, 12, function(err, hash){
+    if(err){
+      console.log('error', err)
+    }
+    else{
+      console.log("el hash: ", hash);
+      return hash;
+    }
+  });
+  // console.log( "el hash: ", hash);
   return bcrypt.compareSync(password, this.CONTRASENIA_USUARIO);
 }        
 
