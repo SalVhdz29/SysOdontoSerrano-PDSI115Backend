@@ -26,6 +26,21 @@ api.post('/private', authMiddleware._isAuth,(req, res)=>{
 //lista de usuarios registrados-Gestion de usuarios.
 api.post("/lista_usuarios_registrados",authMiddleware._isAuth, usuario_controller.usuarios_registrados);
 
+//Cambio en estado de usuario
+api.post("/cambio_estado_usuario",authMiddleware._isAuth, usuario_controller.cambiar_estado_usuario);
+
+//lista de roles activos.
+api.post("/lista_usuarios_rol", authMiddleware._isAuth, usuario_controller.usuario_roles);
+
+//lista de empleados activos sin usuarios.
+api.post("/lista_empleados_activos", authMiddleware._isAuth, usuario_controller.lista_empleados_activos);
+
+//creacion de usuarios
+api.post("/crear_usuario", authMiddleware._isAuth, usuario_controller.crear_usuario);
+
+//actualizar usuario
+api.post("/actualizar_usuario", authMiddleware._isAuth, usuario_controller.actualizar_usuario);
+
 
 module.exports= api;
 

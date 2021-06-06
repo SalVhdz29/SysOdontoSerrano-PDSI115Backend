@@ -49,7 +49,7 @@ const usuario_registrado=async (req,res)=>{
 
             //obteniendo el id de los roles del usuario. se hace con for en vez de map porque map no respeta el async await.
             for (let rol of roles) {
-                let usuario_rol = await _rol_busqueda(rol.ID_F_USUARIO_ROL)
+                let usuario_rol = await _rol_busqueda(rol.ID_ROL)
                 id_roles.push(usuario_rol.ID_USUARIO);
 
                 
