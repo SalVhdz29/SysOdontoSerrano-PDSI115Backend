@@ -39,10 +39,10 @@ api.post("/lista_tiporecurso_registrados",authMiddleware._isAuth, tiporecurso_co
 api.post("/cambio_estado_tiporecurso",authMiddleware._isAuth, tiporecurso_controller.cambiar_estado_tiporecurso);
 
 //lista de recursos activos.
-api.post("/lista_tiporecurso_recurso", authMiddleware._isAuth, tiporecurso_controller.tiporecurso_recurso);
+//api.post("/lista_tiporecurso_recurso", authMiddleware._isAuth, tiporecurso_controller.tiporecurso_recurso);
 
 //creacion de tiporecurso
-api.post("/crear_tiporecurso", authMiddleware._isAuth, tiporecurso_controller.crear_tiporecurso);
+api.post("/crear_tiporecurso", authMiddleware._isAuth, tiporecurso_controller.crear_tipo_recurso);
 
 //actualizar recurso asociándolo con tiporecurso
 api.post("/actualizar_recurso", authMiddleware._isAuth, tiporecurso_controller.actualizar_recurso);

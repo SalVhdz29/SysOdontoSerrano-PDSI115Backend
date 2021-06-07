@@ -12,7 +12,7 @@ var Entity= init_models(sequelize); // inicialización de los modelos.
 //Servicios
 const auth_service = require("../services/auth_service");
 
-//obtiene la lista de tiporecurso registrados de tipo usuario.
+//obtiene la lista de tiporecurso registrados de tipo tiporecurso.
 const tiporecurso_registrados = async(req, res)=>{
 
     try{
@@ -25,14 +25,14 @@ const tiporecurso_registrados = async(req, res)=>{
                 ID_TIPO_RECURSO: 1
             }
         });
-
-        const usuarios_roles = await Entity.tbl_n_usuario.findAll({
+/*
+        const tipo_recurso_recurso = await Entity.tbl_n_recurso.findAll({
             where:{
                 ID_TIPO_RECURSO: 2,
                 TIPO_RECURSO_ACTIVO: true
             }
         });
-
+*/
         const recursos_registrados = await Entity.tbl_n_recurso.findAll({});
 
 
@@ -61,7 +61,7 @@ const tiporecurso_registrados = async(req, res)=>{
 
                 let recurso_tipo_recurso = await Entity.tbl_n_recurso.findAll({
                     where:{
-                        ID_TIPO_RECURSO: id_usuario,
+                        ID_TIPO_RECURSO: id_tipo_recurso,
                         RECURSO_ACTIVO: true
                     }
                 });
@@ -99,7 +99,7 @@ const tiporecurso_registrados = async(req, res)=>{
 
                 lista_tiporecurso.push(tipo_recurso_pivote);
 
-            } // fin for usuarios_registrados.
+            } // fin for tiporecurso_registrados.
         }
         res.status(200).send(lista_tiporecurso);
 
@@ -112,7 +112,7 @@ const tiporecurso_registrados = async(req, res)=>{
 }
 
 
-//actualiza el valor de activo de un usuario registrado.
+//actualiza el valor de activo de un tiporecurso registrado.
 const cambiar_estado_tiporecurso = async(req, res) =>{
 
     try{
@@ -218,7 +218,7 @@ const crear_tipo_recurso = async(req, res) =>{
         let id_tipo_recurso_creado = nuevo_tipo_recurso.ID_TIPO_RECURSO;
         console.log("ID_TIPO_RECURSO: ", id_tipo_recurso_creado);
         
-        //relacionando roles con el usuario.
+        //relacionando recursos con el tiporecurso.
 
         if(recurso.length != 0)
         {
@@ -233,7 +233,7 @@ const crear_tipo_recurso = async(req, res) =>{
                         ID_TIPO_RECURSO: id_tipo_recurso_creado                        
                     },{
                     where: {
-                        ID_ROL: rol_pivote.ID_RECURSO                        
+                        ID_RECURSO: recurso_pivote.ID_RECURSO                        
                       }}
                     );
 
@@ -254,7 +254,7 @@ const crear_tipo_recurso = async(req, res) =>{
 
 //actualizar datos de tiporecurso.
 
-const actualizar_tipo_recurso =async(req, res) =>{
+const actualizar_recurso =async(req, res) =>{
 
     try{
 
@@ -293,7 +293,7 @@ const actualizar_tipo_recurso =async(req, res) =>{
                 console.log("LOS RECURSOS ACCT: ", recurso_tipo_recurso);
                 console.log("LOS QUE LLEGAN: ", recurso);
 
-                //actualizandoo roles antiguos.
+                //actualizandoo recursos antiguos.
                 recurso_tipo_recurso.map(async recurso_it =>{
 
                     //buscando entre los marcados en la actualización.
@@ -341,7 +341,7 @@ const actualizar_tipo_recurso =async(req, res) =>{
 
                     if(tipo_recurso_existente.length == 0)
                     {
-                        console.log("CREO EL ROL: ", id_tipo_recurso_recurso)
+                        console.log("CREO EL RECURSO: ", id_tipo_recurso_recurso)
                         let recurso_creado = await Entity.tbl_n_recurso.create({
                             //ID_RECURSO: id_tipo_recurso_recurso,
                             ID_TIPO_RECURSO: id_tipo_recurso,
@@ -373,5 +373,5 @@ module.exports={
     cambiar_estado_tiporecurso,
     //tipo_recurso_recurso,    
     crear_tipo_recurso,
-    actualizar_tipo_recurso
+    actualizar_recurso
 }
