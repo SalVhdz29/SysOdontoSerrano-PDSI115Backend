@@ -5,8 +5,9 @@ const api = express.Router();
 const ejemplo_Ctrl = require("../controllers/controlador_ejemplo");
 const auth = require("../controllers/auth");
 const authMiddleware = require('../middlewares/authMiddleware')
+const expediente = require("../controllers/expediente_controller");
 
-
+api.get("/expediente",expediente._NuevoExpediente);
 //endpoint
 api.get("/hola", ejemplo_Ctrl.saludoMundo);
 //endpoint con parametros en URL (por ser get).
@@ -22,6 +23,6 @@ api.post('/private', authMiddleware._isAuth,(req, res)=>{
     res.status(200).send("Autorizado");
 })
 
-
 module.exports= api;
+
 
