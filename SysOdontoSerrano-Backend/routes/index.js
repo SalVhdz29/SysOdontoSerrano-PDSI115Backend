@@ -33,23 +33,23 @@ api.post('/private', authMiddleware._isAuth,(req, res)=>{
 ////////   rutas para Controlador tiporecurso  /////////
 
 //lista de tiporecurso registrados-Gestion de tiporecurso.
-api.post("/lista_tiporecurso_registrados",authMiddleware._isAuth, tiporecurso_controller.tiporecurso_registrados);
-
-//Cambio en estado de tiporecurso
-api.post("/cambio_estado_tiporecurso",authMiddleware._isAuth, tiporecurso_controller.cambiar_estado_tiporecurso);
+api.post("/lista_tiporecurso_registrados", tiporecurso_controller.tiporecurso_registrados);
 
 //lista de recursos activos.
-//api.post("/lista_tiporecurso_recurso", authMiddleware._isAuth, tiporecurso_controller.tiporecurso_recurso);
+api.post("/lista_recurso_activos", tiporecurso_controller.recurso_activos);
+
+//Cambio en estado de tiporecurso
+api.post("/cambio_estado_tiporecurso", tiporecurso_controller.cambiar_estado_tiporecurso);
 
 //creacion de tiporecurso
-api.post("/crear_tiporecurso", authMiddleware._isAuth, tiporecurso_controller.crear_tipo_recurso);
+api.post("/crear_tiporecurso",  tiporecurso_controller.crear_tipo_recurso);
 
 //actualizar recurso asociándolo con tiporecurso
-api.post("/actualizar_recurso", authMiddleware._isAuth, tiporecurso_controller.actualizar_recurso);
+api.post("/actualizar_tipo_recurso", tiporecurso_controller.actualizar_recurso);
 
 
 
-
+//authMiddleware._isAuth,
 
 
 
