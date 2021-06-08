@@ -5,7 +5,7 @@ const api = express.Router();
 const ejemplo_Ctrl = require("../controllers/controlador_ejemplo");
 const auth = require("../controllers/auth");
 const authMiddleware = require('../middlewares/authMiddleware')
-
+const rol_controller = require("../controllers/rol_controller");
 
 //endpoint
 api.get("/hola", ejemplo_Ctrl.saludoMundo);
@@ -21,7 +21,16 @@ api.post("/login", auth.signIn); //cambiar a POST
 api.post('/private', authMiddleware._isAuth,(req, res)=>{
     res.status(200).send("Autorizado");
 })
-
+//Lista de roles registrados ---- Gestion de Roles. 
+api.post("/lista_roles_registrados",authMiddleware._isAuth, rol_controller.roles_registrados); 
+//Cambio en estado de rol 
+api.post("/cambio_estado_rol",authMiddleware._isAuth, rol_controller.cambiar_estado_rol);
+//lista de permisos activos. 
+api.post("/lista_roles_permiso", authMiddleware._isAuth, rol_controller.rol_permisos);  
+//creacion de roles 
+api.post("/crear_rol", authMiddleware._isAuth, rol_controller.crear_rol); 
+//actualizar rol
+api.post("/actualizar_rol", authMiddleware._isAuth, rol_controller.actualizar_rol); 
 
 module.exports= api;
 
