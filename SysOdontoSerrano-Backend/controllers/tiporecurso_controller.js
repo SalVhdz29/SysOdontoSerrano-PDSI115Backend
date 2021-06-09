@@ -55,23 +55,44 @@ const tiporecurso_registrados = async(req, res)=>{
                 let tipo_recurso_id = ID_TIPO_RECURSO;
                 let tipo_recurso_nombre = NOMBRE_TIPO_RECURSO;                                
                 let tipo_recurso_descripcion = DESCRIPCION_TIPO_RECURSO;
-                let tipo_recurso_activo = TIPO_RECURSO_ACTIVO;               
+                let tipo_recurso_estado = TIPO_RECURSO_ACTIVO;               
 
 
-
-                let recurso = await Entity.tbl_n_recurso.findAll({
+                let recurso =[];
+                let lista_recurso_a = await Entity.tbl_n_recurso.findAll({
                     where:{
                         ID_TIPO_RECURSO: tipo_recurso_id,                        
                     }
                 });
 
+
+                if(lista_recurso_a.length)
+                {
+                    for(let recurso_it of lista_recurso_a )
+                    {
+                        
+            
+                        let nombre_recurso = recurso_it.NOMBRE_RECURSO;
+            
+                        let id_recurso = recurso_it.ID_RECURSO;
+        
+                        let descripcion_recurso = recurso_it.DESCRIPCION_RECURSO;
+        
+                    //    let estado_recurso = resurso_it.RECURSO_ACTIVO;
+            
+                        let recurso_pivote={id_recurso, nombre_recurso, descripcion_recurso};
+            
+                        recurso.push(recurso_pivote);
+                    }
+        
+                }
+
                 let tipo_recurso_pivote = {
                                     tipo_recurso_id,
                                     tipo_recurso_nombre,
                                     tipo_recurso_descripcion,                                      
-                                    tipo_recurso_activo,
+                                    tipo_recurso_estado,
                                     recurso
-
                                     };
 
                 console.log("TIPORECURSO_PIVOTE: ", tipo_recurso_pivote);
@@ -122,8 +143,9 @@ const cambiar_estado_tiporecurso = async(req, res) =>{
                     });
             tipo_recurso = await Entity.tbl_n_tipo_recurso.findByPk(tipo_recurso_id);
 
-        res.json(tipo_recurso)
-        res.status(200).send({message:"OK"});
+            res.status(200).send({message:"OK"});
+
+            res.json(tipo_recurso);
     
     }catch(e)
     {
@@ -139,16 +161,37 @@ const cambiar_estado_tiporecurso = async(req, res) =>{
 const recurso_activos  = async(req, res) =>{
 
     try{
+        let lista_recurso =[];
 
-        let lista_recurso  = await Entity.tbl_n_recurso.findAll({
+        let lista_recurso_activos  = await Entity.tbl_n_recurso.findAll({
             where:{
                 RECURSO_ACTIVO: 1
             }
         });
 
-       
-        
-        //relacionando recursos con el tiporecurso.
+        if(lista_recurso_activos.length)
+        {
+            for(let recurso_it of lista_recurso_activos )
+            {
+                
+    
+                let nombre_recurso = recurso_it.NOMBRE_RECURSO;
+    
+                let id_recurso = recurso_it.ID_RECURSO;
+
+                let descripcion_recurso = recurso_it.DESCRIPCION_RECURSO;
+
+            //    let estado_recurso = resurso_it.RECURSO_ACTIVO;
+    
+                let recurso_pivote={id_recurso, nombre_recurso, descripcion_recurso};
+    
+                lista_recurso.push(recurso_pivote);
+            }
+
+        }
+
+
+
 
         console.log("RECURSOS: ", lista_recurso);
 
@@ -216,9 +259,8 @@ const crear_tipo_recurso = async(req, res) =>{
                     
                 }
         }
- 
-        res.json(tiporecurso_new)
         res.status(200).send({message:"OK"});
+        res.json(tiporecurso_new)
 
 
 
