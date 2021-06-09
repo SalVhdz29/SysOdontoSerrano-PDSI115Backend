@@ -61,7 +61,7 @@ const crear_recurso = async(req, res) =>{
             recurso_activo,
         } = req.body;
 
-        console.log("lo obtenido: ", req.body);
+        console.log("Se muestra: ", req.body);
         let fecha_hoy = DateTime.now();
 
         let tipo_recurso = await Entity.tbl_n_tipo_recurso.findByPk(1);
@@ -101,7 +101,7 @@ const actualizar_usuario =async(req, res) =>{
             recurso_activo,
         } = req.body;
 
-        console.log("LO OBTENIDO: ", req.body);
+        console.log("Se muestra: ", req.body);
 
         let fecha_hoy = DateTime.now();
         let recurso=null;
