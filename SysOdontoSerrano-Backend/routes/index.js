@@ -24,7 +24,7 @@ api.post('/private', authMiddleware._isAuth,(req, res)=>{
 //Lista de roles registrados ---- Gestion de Roles. 
 api.post("/lista_roles_registrados",authMiddleware._isAuth, rol_controller.roles_registrados); 
 //Cambio en estado de rol 
-api.post("/cambio_estado_rol",authMiddleware._isAuth, rol_controller.cambiar_estado_rol);
+api.post("/cambiar_estado_rol",authMiddleware._isAuth, rol_controller.cambiar_estado_rol);
 //lista de permisos activos. 
 api.post("/lista_roles_permiso", authMiddleware._isAuth, rol_controller.rol_permisos);  
 //creacion de roles 

@@ -20,93 +20,96 @@ const roles_registrados = async(req, res)=>{
         //variables de Output. 
         let lista_roles =[]; 
  
-        const roles_registrados = await Entity.tbl_n_rol.findAll({ 
+        const roles_registrados = await Entity.tbl_n_usuario.findAll({ 
             where:{ 
-                ID_TIPO_ROL: 1 
+                ID_TIPO_USUARIO: 2 
             } 
         }); 
- 
-        const roles_permisos = await Entity.tbl_n_rol.findAll({ 
-            where:{ 
-                ID_TIPO_ROL: 2,
-                ROL_ACTIVO: true 
-            } 
-        }); 
- 
- 
- 
  
         if(roles_registrados.length !=0) 
         { 
-            console.log("ENTRAMOS EN ROLES_REGISTRADOS"); 
-            //roles_registrados.map(async rol_r_it =>{ 
-            console.log("ROLES REGISTRADOS: ", roles_registrados); 
+           // console.log("ENTRAMOS EN ROLES_REGISTRADOS"); 
+
+           // console.log("ROLES REGISTRADOS: ", roles_registrados); 
             for(let rol_r_it of roles_registrados){ 
                  
-                let { ID_ROL,  
-                    NOMBRE_ROL, 
-                   DESCRIPCION_ROL, 
-                   FECHA_ROL, 
-                   ROL_ACTIVO 
-                   } = rol_r_it; 
 
-               console.log("EL NOMBRE: ", NOMBRE_ROL); 
+                   let { ID_USUARIO,  
+                    NOMBRE_USUARIO,  
+                   FECHA_CREACION_USUARIO,
+                   USUARIO_ACTIVO 
+                   } = rol_r_it;
 
-               let id_rol = ID_ROL; 
-               let nombre_rol = NOMBRE_ROL; 
-               let fecha_rol = FECHA_ROL; 
-               let rol_activo = ROL_ACTIVO; 
-               let descripcion = DESCRIPCION_ROL; 
+              // console.log("EL NOMBRE: ", NOMBRE_USUARIO); 
+
+               let id_rol = ID_USUARIO; 
+               let nombre_rol = NOMBRE_USUARIO; 
+               let fecha_rol = FECHA_CREACION_USUARIO;
+               let rol_activo = USUARIO_ACTIVO; 
 
 
                let permisos = []; 
 
-               let permisos_rol = await Entity.tbl_n_permiso.findAll({ 
+               let permisos_rol = await Entity.permiso.findAll({ 
                    where:{ 
-                       ID_ROL: id_rol, 
-                       PERMISO_ROL_ACTIVO: true 
+                       ID_USUARIO: id_rol, 
+                       PERMISO_ACTIVO: true 
                    } 
                }); 
 
-               console.log("PERMISOS ENCONTRADOS: ", permisos_rol); 
+              // console.log("PERMISOS ENCONTRADOS: ", permisos_rol); 
                if(permisos_rol.length != 0) 
                { 
-                   permisos_rol.map(permiso_it =>{ 
-                       let rol_permiso = roles_permisos.filter(rol_ro_it => rol_ro_it.ID_ROL == permiso_it.ID_PERMISO); 
+                   for(let permiso_it of permisos_rol){
 
-                       console.log("LO QUE FILTRO: ", rol_permiso);
+                    
+                       let {ID_RECURSO } = permiso_it;
 
-                       let { ID_ROL, NOMBRE_ROL } = rol_permiso[0];
-                       let id_rol = ID_ROL; 
-                       let nombre_rol = NOMBRE_ROL; 
 
+                       let recurso = await Entity.tbl_n_recurso.findAll({
+                           where:{
+                            ID_RECURSO : ID_RECURSO
+                           }
+                       })
+
+                       let nombre_recurso = "";
+                     //  console.log("RECURSO [0]: ", recurso[0]);
+                       recurso = recurso[0];
+                       
+                       if(recurso != null){
+                        let {NOMBRE_RECURSO} = recurso;
+                        nombre_recurso = NOMBRE_RECURSO;
+                       }
+                       
+                      let id_rol = ID_RECURSO;
+                      let nombre_rol = nombre_recurso;
                        let permiso_pivote = {id_rol, nombre_rol}; 
 
                        permisos.push(permiso_pivote); 
-
-                   }); 
+                    }
                } 
-                
-               let rol_pivote = {id_rol, 
-                                     nombre_rol, 
-                                     permisos, 
-                                     descripcion, 
-                                     fecha_rol, 
-                                     rol_activo 
-                                    }; 
+            //    console.log("LOS PERMISOS SON: ", permisos);
 
-               console.log("ROL_PIVOTE: ", rol_pivote); 
+                                    let rol_pivote = {id_rol, 
+                                        nombre_rol,   
+                                        fecha_rol,
+                                        rol_activo,
+                                        permisos 
+                                       };
+
+             //  console.log("ROL_PIVOTE: ", rol_pivote); 
 
                lista_roles.push(rol_pivote); 
 
            } // fin for roles_registrados. 
        } 
+       console.log("")
        res.status(200).send(lista_roles); 
 
    } 
    catch(e) 
    { 
-       console.log>("EL ERROR: ==> ",e); 
+       //console.log>("EL ERROR: ==> ",e); 
        res.status(500).send({errorMessage: "Ha ocurrido un error en el servidor."}); 
    } 
 } 
@@ -118,13 +121,13 @@ const cambiar_estado_rol = async(req, res) =>{
  
         let { id_rol } = req.body; 
 
-        let rol = await Entity.tbl_n_rol.findByPk(id_rol); 
+        let rol = await Entity.tbl_n_usuario.findByPk(id_rol); 
  
-        let rol_activo = rol.ROL_ACTIVO; 
+        let rol_activo = rol.USUARIO_ACTIVO; 
  
-        await Entity.tbl_n_rol.update({ ROL_ACTIVO: !rol_activo },{ 
+        await Entity.tbl_n_usuario.update({ USUARIO_ACTIVO: !rol_activo },{ 
             where: { 
-                ID_ROL: id_rol 
+                ID_USUARIO: id_rol 
             } 
         }); 
  
@@ -133,34 +136,34 @@ const cambiar_estado_rol = async(req, res) =>{
  
     }catch(e) 
     { 
-        console.log>("EL ERROR: ==> ",e); 
+       // console.log>("EL ERROR: ==> ",e); 
         res.status(500).send({errorMessage: "Ha ocurrido un error en el servidor."}); 
     } 
 } 
 
-//obtener rol permisos 
+//obtener permisos de rol
 const rol_permisos = async(req, res) =>{ 
     try{ 
  
         let lista_permisos =[]; 
-        //obteniendo roles de tipo rol permiso. 
-        const roles_permisos = await Entity.tbl_n_rol.findAll({ 
+        //obteniendo permisos del rol 
+        const recursos = await Entity.tbl_n_recurso.findAll({ 
             where:{ 
-                ID_TIPO_ROL: 2, 
-                ROL_ACTIVO: true 
+                RECURSO_ACTIVO: true 
             } 
         }); 
-        if(rol_permisos.length) 
+        if(recursos.length) 
         { 
-            for(let permiso_it of roles_permisos ) 
+            for(let permiso_it of recursos ) 
             { 
                  
      
-                let nombre_rol = permiso_it.NOMBRE_ROL; 
+                let nombre_rol = permiso_it.NOMBRE_RECURSO; 
      
-                let id_rol = permiso_it.ID_ROL; 
+                let id_rol = permiso_it.ID_RECURSO; 
      
-                let permiso_pivote={id_rol, nombre_rol}; 
+               // let id_tipo_recurso = permiso.it.ID_TIPO_RECURSO;
+                let permiso_pivote={id_rol, nombre_rol/*, id_tipo_recurso*/}; 
      
                 lista_permisos.push(permiso_pivote); 
             } 
@@ -189,23 +192,24 @@ const crear_rol = async(req, res) =>{
             permisos, 
         } = req.body; 
  
-        console.log("lo obtenido: ", req.body); 
+       // console.log("lo obtenido: ", req.body); 
         let fecha_hoy = DateTime.now(); 
  
-        let tipo_rol = await Entity.tbl_n_tipo_rol.findByPk(1); 
+        let tipo_usuario = await Entity.tbl_n_tipo_usuario.findByPk(2); 
  
         //creando nuevo rol. 
-        let nuevo_rol = await Entity.tbl_n_rol.create({ 
-            NOMBRE_ROL: nombre_rol, 
-            DESCRIPCION_ROL: descripcion, 
-            ROL_ACTIVO: rol_activo, 
-            FECHA_ROL: fecha_hoy, 
-            FECHA_MODIFICACION_ROL: fecha_hoy, 
-            ID_TIPO_ROL: tipo_rol.ID_TIPO_ROL 
+        let nuevo_usuario_rol = await Entity.tbl_n_usuario.create({ 
+            NOMBRE_USUARIO: nombre_rol,  
+            USUARIO_ACTIVO: rol_activo, 
+            FECHA_CREACION_USUARIO: fecha_hoy, 
+            FECHA_MODIFICACION_USUARIO: fecha_hoy, 
+            ID_TIPO_USUARIO: tipo_usuario.ID_TIPO_USUARIO,
+            CORREO_ELECTRONICO_USUARIO: "esprueba@correo.com",
+            CONTRASENIA_USUARIO: "uuuu"
         }); 
  
-        let id_rol_creado = nuevo_rol.ID_ROL; 
-        console.log("ID_ROL: ", id_rol_creado); 
+        let id_usuario_creado = nuevo_usuario_rol.ID_USUARIO; 
+       // console.log("ID_USUARIO: ", id_usuario_creado); 
  
         //relacionando permisos con el rol. 
  
@@ -216,13 +220,13 @@ const crear_rol = async(req, res) =>{
                 { 
                     let { id_rol } = permiso_it; 
  
-                    let permiso_pivote = await Entity.tbl_n_rol.findByPk(id_rol); 
- 
-                    let permiso_creado = await Entity.tbl_n_permiso.create({ 
-                        ID_PERMISO: permiso_pivote.ID_ROL, 
-                        ID_ROL: id_rol_creado, 
-                        PERMISO_ROL_ACTIVO: true 
-                    }); 
+                    let permiso_pivote = await Entity.tbl_n_recurso.findByPk(id_rol); 
+                    if(permiso_pivote != null){
+                    let permiso_creado = await Entity.permiso.create({ 
+                        ID_RECURSO: permiso_pivote.ID_RECURSO, 
+                        ID_USUARIO: id_usuario_creado, 
+                        PERMISO_ACTIVO: true 
+                    }); }
  
                 } 
         } 
@@ -231,7 +235,7 @@ const crear_rol = async(req, res) =>{
  
     }catch(e) 
     { 
-        console.log(e); 
+        //console.log(e); 
         res.status(500).send({errorMessage: "Ha ocurrido un error en el servidor."}); 
     } 
 }
@@ -250,20 +254,19 @@ const actualizar_rol =async(req, res) =>{
             permisos, 
         } = req.body; 
  
-        console.log("LO OBTENIDO: ", req.body); 
+        //console.log("LO OBTENIDO: ", req.body); 
  
         let fecha_hoy = DateTime.now(); 
         let rol=null; 
 
         //actualización de rol. 
 
-            rol = await Entity.tbl_n_rol.update({ 
-                NOMBRE_ROL: nombre_rol, 
-                DESCRIPCION_ROL: descripcion, 
-                ROL_ACTIVO: rol_activo, 
-                FECHA_MODIFICACION_ROL: fecha_hoy 
+            rol = await Entity.tbl_n_usuario.update({ 
+                NOMBRE_USUARIO: nombre_rol, 
+                USUARIO_ACTIVO: rol_activo, 
+                FECHA_MODIFICACION_USUARIO: fecha_hoy 
             },{where:{ 
-                ID_ROL: id_rol
+                ID_USUARIO: id_rol
             }});  
  
         if(rol != null) 
@@ -271,42 +274,42 @@ const actualizar_rol =async(req, res) =>{
             if(permisos.length != 0) 
             { 
  
-                let permisos_rol = await Entity.tbl_n_permiso.findAll({ 
+                let permisos_rol = await Entity.permiso.findAll({ 
                     where:{ 
-                        ID_ROL: id_rol
+                        ID_USUARIO: id_rol
                     } 
                 }); 
  
-                console.log("LOS PERMISOS ACCT: ", permisos_rol); 
-                console.log("LOS QUE LLEGAN: ", permisos); 
+               // console.log("LOS PERMISOS ACCT: ", permisos_rol); 
+               // console.log("LOS QUE LLEGAN: ", permisos); 
  
                 //actualizandoo permisos antiguos. 
                 permisos_rol.map(async permiso_it =>{ 
  
                     //buscando entre los marcados en la actualización. 
-                    let busqueda = permisos.filter(permiso_iter => permiso_iter.id_rol == permiso_it.ID_PERMISO); 
+                    let busqueda = permisos.filter(permiso_iter => permiso_iter.id_rol == permiso_it.ID_RECURSO); 
  
                     if(busqueda.length != 0) 
                     { 
-                        console.log("ENCONTRO: ", permiso_it.ID_PERMISO); 
-                        let resultado = await Entity.tbl_n_permiso.update({ 
-                            PERMISO_ROL_ACTIVO: true 
+                     //   console.log("ENCONTRO: ", permiso_it.ID_RECURSO); 
+                        let resultado = await Entity.permiso.update({ 
+                            PERMISO_ACTIVO: true 
                         },{ 
                             where:{ 
-                                ID_ROL: id_rol, 
-                                ID_PERMISO: permiso_it.ID_PERMISO 
+                                ID_USUARIO: id_rol, 
+                                ID_RECURSO: permiso_it.ID_RECURSO
                             } 
                         }); 
  
                     } 
                     else{ 
-                        console.log("NO ENCONTRO: ", permiso_it.ID_PERMISO); 
-                        let resultado = await Entity.tbl_n_permiso.update({ 
-                            PERMISO_ROL_ACTIVO: false 
+                       // console.log("NO ENCONTRO: ", permiso_it.ID_RECURSO); 
+                        let resultado = await Entity.permiso.update({ 
+                            PERMISO_ACTIVO: false 
                         },{ 
                             where:{ 
-                                ID_ROL: id_rol, 
-                                ID_PERMISO: permiso_it.ID_PERMISO 
+                                ID_USUARIO: id_rol, 
+                                ID_RECURSO: permiso_it.ID_RECURSO
                             } 
                         }); 
  
@@ -317,22 +320,22 @@ const actualizar_rol =async(req, res) =>{
                 { 
                     let  id_rol_permiso  = permiso_it.id_rol; 
  
-                    let permiso_pivote = await Entity.tbl_n_rol.findByPk(id_rol); 
+                    let permiso_pivote = await Entity.tbl_n_recurso.findByPk(id_rol_permiso); 
  
-                    let permiso_existente = await Entity.tbl_n_permiso.findAll({ 
+                    let permiso_existente = await Entity.permiso.findAll({ 
                         where:{ 
-                            ID_PERMISO: id_rol_permiso, 
-                            ID_ROL: id_rol 
+                            ID_RECURSO: id_rol_permiso, 
+                            ID_USUARIO: id_rol 
                         } 
                     }) 
  
                     if(permiso_existente.length == 0) 
                     { 
-                        console.log("CREO EL PERMISO: ", id_rol_permiso) 
-                        let permiso_creado = await Entity.tbl_n_permiso.create({ 
-                            ID_PERMISO: id_rol_permiso, 
-                            ID_ROL: id_rol, 
-                            PERMISO_ROL_ACTIVO: true 
+                     //   console.log("CREO EL PERMISO: ", id_rol_permiso) 
+                        let permiso_creado = await Entity.permiso.create({ 
+                            ID_RECURSO: id_rol_permiso, 
+                            ID_USUARIO: id_rol, 
+                            PERMISO_ACTIVO: true 
                         }); 
                     } 
  
