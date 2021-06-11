@@ -7,8 +7,10 @@ const auth = require("../controllers/auth");
 const authMiddleware = require('../middlewares/authMiddleware')
 const expediente = require("../controllers/expediente_controller");
 
-api.get("/expediente",expediente._NuevoExpediente);
-api.get("/update_expediente",expediente._UpdateExpediente);
+api.post("/expediente",expediente._NuevoExpediente);
+api.post("/update_expediente",expediente._UpdateExpediente);
+api.post("/obtener_expediente",expediente._ObtenerExpediente);
+api.post("/obtener_un_expediente",expediente._ObtenerUnExpediente);
 //endpoint
 api.get("/hola", ejemplo_Ctrl.saludoMundo);
 //endpoint con parametros en URL (por ser get).

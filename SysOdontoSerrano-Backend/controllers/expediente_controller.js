@@ -13,23 +13,23 @@ var Entity= init_models(sequelize); // inicialización de los modelos.
 
 
 const _NuevoExpediente = async(req, res) =>{
-
-	var nombre = "ulises menjivar";
-	var apellido = "menjivar";
-	var fecha = "06-07-2121";
-	var sexo = "hombre";
-    var correo = "correo";
+	var nombre = req.body.nombre_paciente;
+	var apellido = req.body.apellido_paciente;
+	var fecha_nacimiento = req.body.fecha_nacimiento;
+	var sexo = req.body.sexo;
+    var correo = req.body.correo;
     var activo = 1;
-    var contacto = "123456";
-    var dui = "123445-1";
-    var direccion = "a la chinga";
-    var fecha = "05-05-2021";
+    var contacto = req.body.telefono;
+    var dui = req.body.dui;
+    var direccion = req.body.direccion;
+    var fecha = req.body.ultima_fecha;
+    
 
     let persona = await Entity.tbl_n_persona.create({
 
         NOMBRE_PERSONA: nombre,
         APELLIDO_PERSONA: apellido,
-        FECHA_NACIMIENTO: fecha
+        FECHA_NACIMIENTO: fecha_nacimiento
     });
 
     let detalle_persona = await Entity.tbl_n_detalle_persona.create({
@@ -51,25 +51,28 @@ const _NuevoExpediente = async(req, res) =>{
     });
 
 
-    res.status(200).send({message:"Se guardo la mierda"});
+    res.status(200).send({message:"Se guardo expediente"});
 }
 const _UpdateExpediente = async(req, res) =>{
 
-    var nombre = "ulises menjivar";
-    var apellido = "menjivar";
-    var fecha = "06-07-2121";
-    var sexo = "hombre";
-    var correo = "wilber@actualizo";
-    var activo = 1;
-    var contacto = "777777";
-    var dui = "99999-5";
-    var direccion = "vete a ka dobler el doble";
-    var fecha = "05-05-2021";
-    var re_servicio = new Object();
-
+     var correo = req.body.correo;
+     var contacto = req.body.telefono;
+     var direccion = req.body.direccion;
+     var id_exp = req.body.id_expediente;
+      
+    let expediente_con = await Entity.tbl_n_expediente.findAll({
+        where:{
+            ID_EXPEDIENTE: id_exp
+        }
+    });
+    let paciente_con = await Entity.tbl_n_paciente.findAll({
+        where:{
+            ID_PACIENTE: expediente_con[0].ID_PACIENTE
+        }
+    });
     const persona = await Entity.tbl_n_persona.findAll({
         where:{
-            ID_PERSONA: 36
+            ID_PERSONA: paciente_con[0].ID_PERSONA
         }
     });
     
@@ -84,10 +87,7 @@ const _UpdateExpediente = async(req, res) =>{
         }
     });
 
-    re_servicio = servicio_update_expediente.servicio_update_expediente(correo,activo,contacto,direccion,paciente_consulta,detalle_persona_consulta);
-
-    if(re_servicio['correo']){
-        let paciente = await Entity.tbl_n_paciente.update(
+    let paciente = await Entity.tbl_n_paciente.update(
         {
         CORREO_ELECTRONICO_PACIENTE: correo
         },{
@@ -95,43 +95,59 @@ const _UpdateExpediente = async(req, res) =>{
         ID_PERSONA: persona[0].ID_PERSONA,
     }
     });
-    }
-    if(re_servicio['activo']){
-        let paciente = await Entity.tbl_n_paciente.update(
-        {
-        PACIENTE_ACTIVO: activo
-        },{
-        where:{
-        ID_PERSONA: persona[0].ID_PERSONA,
-    }
-    });
-    }
-    if(re_servicio['contacto']){
         let detalle_persona = await Entity.tbl_n_detalle_persona.update(
         {
-            NUMERO_DE_CONTACTO: contacto
-        },{
-        where:{
-            ID_PERSONA: persona[0].ID_PERSONA
-        }
-    });
-
-    }
-    if(re_servicio['direccion']){
-        let detalle_persona = await Entity.tbl_n_detalle_persona.update(
-        {
+            NUMERO_DE_CONTACTO: contacto,
             DIRECCION: direccion
         },{
         where:{
             ID_PERSONA: persona[0].ID_PERSONA
         }
     });
-
-    }
-    res.status(200).send({message:"Se actualizo la mierda"});
+           
+    res.status(200).send({message:"Actualicion completada del servidor"});
 }
+const _ObtenerExpediente = async(req, res) =>{
+
+    let persona_consulta = await Entity.tbl_n_persona.findAll({
+    });
+    let detalle_persona_consulta = await Entity.tbl_n_detalle_persona.findAll({
+    });
+    let expediente_consulta = await Entity.tbl_n_expediente.findAll({
+    });
+    let paciente_consulta = await Entity.tbl_n_paciente.findAll({
+    });
+
+    let re_servicio = [];
+    re_servicio = servicio_update_expediente.obtenerExpedientes(paciente_consulta,persona_consulta,detalle_persona_consulta,expediente_consulta);
+
+    res.status(200).send(re_servicio);
+}
+const _ObtenerUnExpediente = async(req, res) =>{
+
+    let persona_consulta = await Entity.tbl_n_persona.findAll({
+    });
+    let detalle_persona_consulta = await Entity.tbl_n_detalle_persona.findAll({
+    });
+    let expediente_consulta = await Entity.tbl_n_expediente.findAll({
+    });
+    let paciente_consulta = await Entity.tbl_n_paciente.findAll({
+        where:{
+            ID_PERSONA: 36
+        }
+    });
+
+    let re_servicio = [];
+    re_servicio = servicio_update_expediente.obtenerExpedientes(paciente_consulta,persona_consulta,detalle_persona_consulta,expediente_consulta);
+
+
+    res.status(200).send(re_servicio);
+}
+
 module.exports = {
     _NuevoExpediente,
-    _UpdateExpediente
+    _UpdateExpediente,
+    _ObtenerExpediente,
+    _ObtenerUnExpediente
 }
 
