@@ -12,6 +12,67 @@ const { DateTime } = require("luxon");
 //Servicios
 const auth_service = require("../services/auth_service");
 
+//obtiene la lista de usuarios registrados de tipo usuario.
+const recursos_registrados = async(req, res)=>{
+
+    try{
+
+        //variables de Output.
+        let lista_recursos =[];
+
+        const recursos_registrados = await Entity.tbl_n_recurso.findAll({
+            where:{
+                ID_TIPO_RECURSO: 1
+            }
+        });
+
+
+        if(recursos_registrados.length !=0)
+        {
+            console.log("ENTRAMOS EN RECURSOS_REGISTRADOS");
+            //recursos_registrados.map(async recurso_r_it =>{
+            console.log("USUARIOS REGISTRADOS: ", recursos_registrados);
+            for(let recurso_r_it of recursos_registrados){
+
+                let { ID_RECURSO,
+                    NOMBRE_RECURSO,
+                    DESCRIPCION_RECURSO,
+                    FECHA_CREACION_RECURSO,
+                    RECURSO_ACTIVO
+                    } = recurso_r_it;
+
+                console.log("EL NOMBRE: ", NOMBRE_RECURSO);
+
+                let id_recurso = ID_RECURSO;
+                let nombre_recurso= NOMBRE_USUARIO;
+                let fecha_creacion_recurso = FECHA_CREACION_RECURSO;
+                let recurso_activo = RECURSO_ACTIVO;
+                let descripcion_recurso = DESCRIPCION_RECURSO;
+
+
+                let usuario_pivote = {id_recurso,
+                                      nombre_recurso,
+                                      descripcion_recurso,
+                                      fecha_creacion_recurso,
+                                      recurso_activo
+                                     };
+
+                console.log("RECURSO_PIVOTE: ", recurso_pivote);
+
+                lista_recursos.push(usuario_pivote);
+
+            } // fin for recursos_registrados.
+        }
+        res.status(200).send(lista_recursos);
+
+    }
+    catch(e)
+    {
+        console.log>("EL ERROR: ==> ",e);
+        res.status(500).send({errorMessage:  "Ha ocurrido un error en el servidor."});
+    }
+}
+
 //actualiza el valor de activo del recurso.
 const cambiar_estado_recurso = async(req, res) =>{
 
@@ -28,7 +89,7 @@ const cambiar_estado_recurso = async(req, res) =>{
 
         let recurso = await Entity.tbl_n_recurso.findByPk(id_recurso);
 
-        let estado_activo = recurso.USUARIO_ACTIVO;
+        let estado_activo = recurso.RECURSO_ACTIVO;
 
         await Entity.tbl_n_recurso.update({ RECURSO_ACTIVO: !estado_activo },{
             where: {
@@ -76,7 +137,7 @@ const crear_recurso = async(req, res) =>{
             ID_TIPO_RECURSO: tipo_recurso.ID_TIPO_RECURSO
         });
 
-        let id_recurso_creado = nuevo_usuario.ID_RECURSO;
+        let id_recurso_creado = nuevo_recurso.ID_RECURSO;
         console.log("ID_RECURSO: ", id_recurso_creado);
 
         res.status(200).send({message:"OK"});
@@ -90,7 +151,7 @@ const crear_recurso = async(req, res) =>{
 
 //actualizar datos del recurso.
 
-const actualizar_usuario =async(req, res) =>{
+const actualizar_recurso =async(req, res) =>{
 
     try{
 
@@ -124,9 +185,12 @@ const actualizar_usuario =async(req, res) =>{
 
 }
 
+
+
 module.exports={
-    cambiar_estado_recurso,
     crear_recurso,
-    actualizar_recurso
+    actualizar_recurso,
+    recursos_registrados,
+    cambiar_estado_recurso,
 }
 
