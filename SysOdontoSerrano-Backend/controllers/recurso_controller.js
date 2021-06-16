@@ -12,7 +12,7 @@ const { DateTime } = require("luxon");
 //Servicios
 const auth_service = require("../services/auth_service");
 
-//obtiene la lista de usuarios registrados de tipo usuario.
+//obtiene la lista de recursos registrados de tipo usuario.
 const recursos_registrados = async(req, res)=>{
 
     try{
@@ -21,17 +21,15 @@ const recursos_registrados = async(req, res)=>{
         let lista_recursos =[];
 
         const recursos_registrados = await Entity.tbl_n_recurso.findAll({
-            where:{
-                ID_TIPO_RECURSO: 1
-            }
+
         });
 
 
         if(recursos_registrados.length !=0)
         {
-            console.log("ENTRAMOS EN RECURSOS_REGISTRADOS");
+            console.log("entra RECURSOS_REGISTRADOS");
             //recursos_registrados.map(async recurso_r_it =>{
-            console.log("USUARIOS REGISTRADOS: ", recursos_registrados);
+            console.log("RECURSOS REGISTRADOS: ", recursos_registrados);
             for(let recurso_r_it of recursos_registrados){
 
                 let { ID_RECURSO,
@@ -45,12 +43,13 @@ const recursos_registrados = async(req, res)=>{
 
                 let id_recurso = ID_RECURSO;
                 let nombre_recurso= NOMBRE_USUARIO;
+                let descripcion_recurso = DESCRIPCION_RECURSO;
                 let fecha_creacion_recurso = FECHA_CREACION_RECURSO;
                 let recurso_activo = RECURSO_ACTIVO;
-                let descripcion_recurso = DESCRIPCION_RECURSO;
+                
 
 
-                let usuario_pivote = {id_recurso,
+                let recurso_pivote = {id_recurso,
                                       nombre_recurso,
                                       descripcion_recurso,
                                       fecha_creacion_recurso,
@@ -59,7 +58,7 @@ const recursos_registrados = async(req, res)=>{
 
                 console.log("RECURSO_PIVOTE: ", recurso_pivote);
 
-                lista_recursos.push(usuario_pivote);
+                lista_recursos.push(recurso_pivote);
 
             } // fin for recursos_registrados.
         }
