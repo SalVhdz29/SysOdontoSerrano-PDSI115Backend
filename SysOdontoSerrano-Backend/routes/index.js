@@ -4,7 +4,9 @@ const api = express.Router();
 //Controladores.
 const ejemplo_Ctrl = require("../controllers/controlador_ejemplo");
 const auth = require("../controllers/auth");
-const authMiddleware = require('../middlewares/authMiddleware')
+const recurso_controller = require("../controllers/recurso_controller");
+//Middleware
+const authMiddleware = require('../middlewares/authMiddleware');
 
 
 //endpoint
@@ -22,6 +24,21 @@ api.post('/private', authMiddleware._isAuth,(req, res)=>{
     res.status(200).send("Autorizado");
 })
 
+
+
+//Lista de servicios
+
+//Recursos registrados
+api.post("/recursos_registrados", authMiddleware._isAuth, recurso_controller.recursos_registrados);
+
+//Cambio en estado del recurso
+api.post("/cambiar_estado_recurso",authMiddleware._isAuth, recurso_controller.cambiar_estado_recurso);
+
+//creacion de recurso
+api.post("/crear_recurso", authMiddleware._isAuth, recurso_controller.crear_recurso);
+
+//actualizar recurso
+api.post("/actualizar_recurso", authMiddleware._isAuth, recurso_controller.actualizar_recurso);
 
 module.exports= api;
 
