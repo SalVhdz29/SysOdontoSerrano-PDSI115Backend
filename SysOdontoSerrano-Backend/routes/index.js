@@ -9,7 +9,12 @@ const usuario_controller = require("../controllers/usuario_controller");
 const authMiddleware = require('../middlewares/authMiddleware');
 const rol_controller = require("../controllers/rol_controller");
 const tiporecurso_controller = require("../controllers/tiporecurso_controller");
+const expediente = require("../controllers/expediente_controller");
 
+api.post("/expediente",expediente._NuevoExpediente);
+api.post("/update_expediente",expediente._UpdateExpediente);
+api.post("/obtener_expediente",expediente._ObtenerExpediente);
+api.post("/obtener_un_expediente",expediente._ObtenerUnExpediente);
 //endpoint
 api.get("/hola", ejemplo_Ctrl.saludoMundo);
 //endpoint con parametros en URL (por ser get).
@@ -78,4 +83,5 @@ api.post("/actualizar_tipo_recurso", authMiddleware._isAuth, tiporecurso_control
 
 
 module.exports= api;
+
 
