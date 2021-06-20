@@ -8,6 +8,7 @@ const usuario_controller = require("../controllers/usuario_controller");
 //middleware de rutas
 const authMiddleware = require('../middlewares/authMiddleware');
 const rol_controller = require("../controllers/rol_controller");
+const tiporecurso_controller = require("../controllers/tiporecurso_controller");
 
 //endpoint
 api.get("/hola", ejemplo_Ctrl.saludoMundo);
@@ -50,6 +51,30 @@ api.post("/crear_usuario", authMiddleware._isAuth, usuario_controller.crear_usua
 
 //actualizar usuario
 api.post("/actualizar_usuario", authMiddleware._isAuth, usuario_controller.actualizar_usuario);
+
+
+
+////////   rutas para Controlador tiporecurso  /////////
+
+//lista de tiporecurso registrados-Gestion de tiporecurso.
+api.post("/lista_tiporecurso_registrados", authMiddleware._isAuth, tiporecurso_controller.tiporecurso_registrados);
+
+//lista de recursos activos.
+api.post("/lista_recurso_activos", authMiddleware._isAuth, tiporecurso_controller.recurso_activos);
+
+//Cambio en estado de tiporecurso
+api.post("/cambio_estado_tiporecurso", authMiddleware._isAuth, tiporecurso_controller.cambiar_estado_tiporecurso);
+
+//creacion de tiporecurso
+api.post("/crear_tiporecurso", authMiddleware._isAuth, tiporecurso_controller.crear_tipo_recurso);
+
+//actualizar recurso asociándolo con tiporecurso
+api.post("/actualizar_tipo_recurso", authMiddleware._isAuth, tiporecurso_controller.actualizar_recurso);
+
+
+
+//authMiddleware._isAuth,
+
 
 
 module.exports= api;
