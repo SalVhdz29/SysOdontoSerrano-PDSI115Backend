@@ -24,7 +24,7 @@ const _isAuth=async(req, res, next)=>{
 
     const payload = jwt.decode(token, config.SECRET_TOKEN);
     let now = DateTime.now();
-    
+    console.log("FECHA EXP: ", payload.exp);
     if(payload.exp <=now) // si la fecha de caducado es menor a la fecha actual.
     {
         return res.status(401).send({ message: 'El token ha expirado'});
