@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('tbl_n_rol', {
-    ID_ROL: {
+    TBL_ID_USUARIO: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
@@ -18,10 +18,6 @@ module.exports = function(sequelize, DataTypes) {
         model: 'tbl_n_usuario',
         key: 'ID_USUARIO'
       }
-    },
-    ROL_USUARIO_ACTIVO: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false
     }
   }, {
     sequelize,
@@ -33,7 +29,7 @@ module.exports = function(sequelize, DataTypes) {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "ID_ROL" },
+          { name: "TBL_ID_USUARIO" },
           { name: "ID_USUARIO" },
         ]
       },

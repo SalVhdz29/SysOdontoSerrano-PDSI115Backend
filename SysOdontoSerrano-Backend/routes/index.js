@@ -40,5 +40,7 @@ api.post("/crear_recurso", authMiddleware._isAuth, recurso_controller.crear_recu
 //actualizar recurso
 api.post("/actualizar_recurso", authMiddleware._isAuth, recurso_controller.actualizar_recurso);
 
+//Lista tipos recurso
+api.get("/lista_tipos_recurso_g_recurso",authMiddleware._isAuth, recurso_controller.lista_tipos_recurso);
 module.exports= api;
 
