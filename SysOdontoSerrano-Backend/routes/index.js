@@ -10,6 +10,7 @@ const authMiddleware = require('../middlewares/authMiddleware');
 const rol_controller = require("../controllers/rol_controller");
 const tiporecurso_controller = require("../controllers/tiporecurso_controller");
 const expediente = require("../controllers/expediente_controller");
+const recurso_controller = require("../controllers/recurso_controller");
 
 api.post("/expediente",expediente._NuevoExpediente);
 api.post("/update_expediente",expediente._UpdateExpediente);
@@ -82,6 +83,23 @@ api.post("/actualizar_tipo_recurso", authMiddleware._isAuth, tiporecurso_control
 
 
 
+
+//Lista de servicios
+
+//Recursos registrados
+api.post("/recursos_registrados", authMiddleware._isAuth, recurso_controller.recursos_registrados);
+
+//Cambio en estado del recurso
+api.post("/cambiar_estado_recurso",authMiddleware._isAuth, recurso_controller.cambiar_estado_recurso);
+
+//creacion de recurso
+api.post("/crear_recurso", authMiddleware._isAuth, recurso_controller.crear_recurso);
+
+//actualizar recurso
+api.post("/actualizar_recurso", authMiddleware._isAuth, recurso_controller.actualizar_recurso);
+
+//Lista tipos recurso
+api.get("/lista_tipos_recurso_g_recurso",authMiddleware._isAuth, recurso_controller.lista_tipos_recurso);
 module.exports= api;
 
 

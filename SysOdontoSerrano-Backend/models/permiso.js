@@ -18,10 +18,6 @@ module.exports = function(sequelize, DataTypes) {
         model: 'tbl_n_usuario',
         key: 'ID_USUARIO'
       }
-    },
-    PERMISO_ACTIVO: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false
     }
   }, {
     sequelize,
