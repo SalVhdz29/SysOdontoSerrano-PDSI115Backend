@@ -25,9 +25,7 @@ const signUp = (req, res)=>{
 
 const usuario_registrado=async (req,res)=>{
     try{
-    let autorizado_servicio = auth_service._autorización_Recurso(1);
-    if(autorizado_servicio)
-    {
+ 
 
    
             console.log("req====>", req);
@@ -41,34 +39,97 @@ const usuario_registrado=async (req,res)=>{
 
             const roles = await Entity.tbl_n_rol.findAll({
                 where:{
-                    ID_USUARIO: usuario.ID_USUARIO
+                    ID_USUARIO: usuario.ID_USUARIO,
+                    ROL_USUARIO_ACTIVO: true
                 }
             });
 
-            console.log(roles);
+            //console.log(roles);
+            let permisos=[];
 
-            //obteniendo el id de los roles del usuario. se hace con for en vez de map porque map no respeta el async await.
+            let tipos_recurso =[];
+
+            let recursos_permiso = [];
+            
             for (let rol of roles) {
-                let usuario_rol = await _rol_busqueda(rol.ID_ROL)
-                id_roles.push(usuario_rol.ID_USUARIO);
 
+
+                let permisos = await Entity.permiso.findAll({
+                    
+                        where:{
+                            ID_USUARIO: rol.ID_ROL,
+                            PERMISO_ACTIVO: true
+                        }          
+                });
+                for(let permiso_it of permisos)
+                {
+                    let recurso = await Entity.tbl_n_recurso.findByPk(permiso_it.ID_RECURSO);
+                  
+                    if(recurso)
+                    {
+                        recursos_permiso.push(recurso);
+                        let tipo_recurso = await Entity.tbl_n_tipo_recurso.findByPk(recurso.ID_TIPO_RECURSO);
+                        console.log("TIPO RECURSO IT: ", tipo_recurso.ID_TIPO_RECURSO)
+                        if(tipo_recurso)
+                        {
+                            let coincidencias = tipos_recurso.filter(tipo_it => tipo_it.ID_TIPO_RECURSO == tipo_recurso.ID_TIPO_RECURSO);
+                            console.log("COINCIDENCIAS : ", coincidencias.length);
+                            if(coincidencias.length == 0)
+                            {
+                                tipos_recurso.push(tipo_recurso);
+                            }
+                        }
+                    }
+                }
+                
                 
             }
+            console.log("TIPOS RECURSO: ", tipos_recurso);
+            for(let tipo_recurso_it of tipos_recurso)
+            {
+                let nombre_modulo = tipo_recurso_it.NOMBRE_TIPO_RECURSO;
+
+                let recursos =[];
+
+                let filtrados = recursos_permiso.filter(recurso_it => recurso_it.ID_TIPO_RECURSO == tipo_recurso_it.ID_TIPO_RECURSO);
+
+                if(filtrados.length != 0)
+                {
+                    for(let iterador of filtrados)
+                    {
+                        let recurso = iterador;
+
+                        let ruta = recurso.RUTA_RECURSO;
+                        let id_recurso = recurso.ID_RECURSO;
+
+                        let objeto ={ruta, id_recurso};
+                        recursos.push(objeto);
+                    }
+                }
+
+                let objeto = { nombre_modulo, recursos};
+
+                permisos.push(objeto);
+
+
+            }
         
+            console.log("PERMISOS ANTES DE ENVIO: ", permisos);
+            // console.log("LOS ROLES ===>: ", id_roles);
+
             
-            console.log("LOS ROLES ===>: ", id_roles);
 
             res.status(200).send({
                 id_usuario: usuario.ID_USUARIO,
                 nombre_usuario: usuario.NOMBRE_USUARIO,
                 correo_electronico_usuario: usuario.CORREO_ELECTRONICO_USUARIO,
-                roles_usuario: id_roles,
+                permisos
                 
 
 
             });
 
-        }
+        
     }
     catch(e)
     {

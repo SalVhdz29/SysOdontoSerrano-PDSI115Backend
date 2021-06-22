@@ -37,7 +37,8 @@ const roles_registrados = async(req, res)=>{
                    let { ID_USUARIO,  
                     NOMBRE_USUARIO,  
                    FECHA_CREACION_USUARIO,
-                   USUARIO_ACTIVO 
+                   USUARIO_ACTIVO,
+                   DESCRIPCION_USUARIO
                    } = rol_r_it;
 
               // console.log("EL NOMBRE: ", NOMBRE_USUARIO); 
@@ -45,7 +46,8 @@ const roles_registrados = async(req, res)=>{
                let id_rol = ID_USUARIO; 
                let nombre_rol = NOMBRE_USUARIO; 
                let fecha_rol = FECHA_CREACION_USUARIO;
-               let rol_activo = USUARIO_ACTIVO; 
+               let rol_activo = USUARIO_ACTIVO;
+               let descripcion = DESCRIPCION_USUARIO
 
 
                let permisos = []; 
@@ -94,7 +96,8 @@ const roles_registrados = async(req, res)=>{
                                         nombre_rol,   
                                         fecha_rol,
                                         rol_activo,
-                                        permisos 
+                                        permisos,
+                                        descripcion 
                                        };
 
              //  console.log("ROL_PIVOTE: ", rol_pivote); 
@@ -187,29 +190,35 @@ const crear_rol = async(req, res) =>{
  
         let { 
             nombre_rol, 
-            descripcion, 
+            descripcion_rol, 
             rol_activo, 
             permisos, 
         } = req.body; 
  
-       // console.log("lo obtenido: ", req.body); 
+       console.log("lo obtenido: ", req.body); 
         let fecha_hoy = DateTime.now(); 
  
         let tipo_usuario = await Entity.tbl_n_tipo_usuario.findByPk(2); 
+        console.log("EL TIPO USUARIO: ", tipo_usuario.ID_TIPO_USUARIO);
  
         //creando nuevo rol. 
+    
         let nuevo_usuario_rol = await Entity.tbl_n_usuario.create({ 
             NOMBRE_USUARIO: nombre_rol,  
             USUARIO_ACTIVO: rol_activo, 
             FECHA_CREACION_USUARIO: fecha_hoy, 
             FECHA_MODIFICACION_USUARIO: fecha_hoy, 
             ID_TIPO_USUARIO: tipo_usuario.ID_TIPO_USUARIO,
-            CORREO_ELECTRONICO_USUARIO: "esprueba@correo.com",
-            CONTRASENIA_USUARIO: "uuuu"
+            CORREO_ELECTRONICO_USUARIO: "*_____________*",
+            CONTRASENIA_USUARIO: "usuarioRol",
+            DESCRIPCION_USUARIO: descripcion_rol
         }); 
+  
+
+     
  
         let id_usuario_creado = nuevo_usuario_rol.ID_USUARIO; 
-       // console.log("ID_USUARIO: ", id_usuario_creado); 
+        console.log("ID_USUARIO_CREADO: ", id_usuario_creado); 
  
         //relacionando permisos con el rol. 
  
@@ -230,12 +239,12 @@ const crear_rol = async(req, res) =>{
  
                 } 
         } 
- 
+        console.log("LLEGO AL FINAL");
         res.status(200).send({message:"OK"}); 
  
     }catch(e) 
     { 
-        //console.log(e); 
+        console.log("EL ERROR: ",e); 
         res.status(500).send({errorMessage: "Ha ocurrido un error en el servidor."}); 
     } 
 }

@@ -16,6 +16,7 @@ var Entity= init_models(sequelize); // inicialización de los modelos.
 
 
 const _isAuth=async(req, res, next)=>{
+    console.log("EL MIDDLEWARE");
     if(!req.headers.authorization){
         return res.status(403).send({message: "No está autorizado para este recurso no Aut head"});
     }

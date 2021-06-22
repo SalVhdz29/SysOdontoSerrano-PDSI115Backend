@@ -18,6 +18,10 @@ module.exports = function(sequelize, DataTypes) {
         model: 'tbl_n_usuario',
         key: 'ID_USUARIO'
       }
+    },
+    ROL_USUARIO_ACTIVO: {
+      type: DataTypes.TINYINT,
+      allowNull: false
     }
   }, {
     sequelize,
