@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('tbl_n_rol', {
-    TBL_ID_USUARIO: {
+    ID_ROL: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
@@ -29,7 +29,7 @@ module.exports = function(sequelize, DataTypes) {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "TBL_ID_USUARIO" },
+          { name: "ID_ROL" },
           { name: "ID_USUARIO" },
         ]
       },

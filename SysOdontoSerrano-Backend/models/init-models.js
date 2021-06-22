@@ -26,8 +26,8 @@ function initModels(sequelize) {
 
   tbl_n_recurso.belongsToMany(tbl_n_usuario, { as: 'ID_USUARIO_tbl_n_usuarios', through: permiso, foreignKey: "ID_RECURSO", otherKey: "ID_USUARIO" });
   tbl_n_usuario.belongsToMany(tbl_n_recurso, { as: 'ID_RECURSO_tbl_n_recursos', through: permiso, foreignKey: "ID_USUARIO", otherKey: "ID_RECURSO" });
-  tbl_n_usuario.belongsToMany(tbl_n_usuario, { as: 'ID_USUARIO_tbl_n_usuarios', through: tbl_n_rol, foreignKey: "TBL_ID_USUARIO", otherKey: "ID_USUARIO" });
-  tbl_n_usuario.belongsToMany(tbl_n_usuario, { as: 'TBL_ID_USUARIO_tbl_n_usuarios', through: tbl_n_rol, foreignKey: "ID_USUARIO", otherKey: "TBL_ID_USUARIO" });
+  tbl_n_usuario.belongsToMany(tbl_n_usuario, { as: 'ID_USUARIO_tbl_n_usuarios', through: tbl_n_rol, foreignKey: "ID_ROL", otherKey: "ID_USUARIO" });
+  tbl_n_usuario.belongsToMany(tbl_n_usuario, { as: 'ID_ROL_tbl_n_usuarios', through: tbl_n_rol, foreignKey: "ID_USUARIO", otherKey: "ID_ROL" });
   tbl_n_usuario.belongsTo(tbl_n_empleado, { as: "ID_EMPLEADO_tbl_n_empleado", foreignKey: "ID_EMPLEADO"});
   tbl_n_empleado.hasMany(tbl_n_usuario, { as: "tbl_n_usuarios", foreignKey: "ID_EMPLEADO"});
   tbl_n_expediente.belongsTo(tbl_n_paciente, { as: "ID_PACIENTE_tbl_n_paciente", foreignKey: "ID_PACIENTE"});
@@ -46,8 +46,8 @@ function initModels(sequelize) {
   tbl_n_tipo_usuario.hasMany(tbl_n_usuario, { as: "tbl_n_usuarios", foreignKey: "ID_TIPO_USUARIO"});
   permiso.belongsTo(tbl_n_usuario, { as: "ID_USUARIO_tbl_n_usuario", foreignKey: "ID_USUARIO"});
   tbl_n_usuario.hasMany(permiso, { as: "permisos", foreignKey: "ID_USUARIO"});
-  tbl_n_rol.belongsTo(tbl_n_usuario, { as: "TBL_ID_USUARIO_tbl_n_usuario", foreignKey: "TBL_ID_USUARIO"});
-  tbl_n_usuario.hasMany(tbl_n_rol, { as: "tbl_n_rols", foreignKey: "TBL_ID_USUARIO"});
+  tbl_n_rol.belongsTo(tbl_n_usuario, { as: "ID_ROL_tbl_n_usuario", foreignKey: "ID_ROL"});
+  tbl_n_usuario.hasMany(tbl_n_rol, { as: "tbl_n_rols", foreignKey: "ID_ROL"});
   tbl_n_rol.belongsTo(tbl_n_usuario, { as: "ID_USUARIO_tbl_n_usuario", foreignKey: "ID_USUARIO"});
   tbl_n_usuario.hasMany(tbl_n_rol, { as: "ID_USUARIO_tbl_n_rols", foreignKey: "ID_USUARIO"});
 

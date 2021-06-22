@@ -11,10 +11,6 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(30),
       allowNull: false
     },
-    DESCRIPCION_TIPO_RECURSO: {
-      type: DataTypes.STRING(200),
-      allowNull: false
-    },
     TIPO_RECURSO_ACTIVO: {
       type: DataTypes.BOOLEAN,
       allowNull: false
