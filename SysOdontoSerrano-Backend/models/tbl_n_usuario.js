@@ -48,6 +48,10 @@ module.exports = function(sequelize, DataTypes) {
     USUARIO_ACTIVO: {
       type: DataTypes.BOOLEAN,
       allowNull: false
+    },
+    DESCRIPCION_USUARIO: {
+      type: DataTypes.STRING(250),
+      allowNull: true
     }
   }, {
     sequelize,
@@ -79,29 +83,38 @@ module.exports = function(sequelize, DataTypes) {
     ]
   });
 
-  tbl_n_usuario.prototype.generateHash=function (password) {
-    return bcrypt.hash(password, 8, function(err, hash){
-        if(err){
-            console.log('error'+err)
-        }else{
-            return hash;
-        }
+  const generateHash = async(usuario) =>{
+    // const salt = await bcrypt.genSalt(8); 
+    // usuario.CONTRASENIA_USUARIO = await bcrypt.hash(usuario.CONTRASENIA_USUARIO, salt);
+    // console.log("hook called");
+    // console.log("la contrasenia a hashear: ", usuario.CONTRASENIA_USUARIO)
+  
+    //const salt = bcrypt.genSalt(10);
+    usuario.CONTRASENIA_USUARIO = usuario.CONTRASENIA_USUARIO && usuario.CONTRASENIA_USUARIO != "" ? bcrypt.hashSync(usuario.CONTRASENIA_USUARIO, 12) : "";
+  
+  }
+  
+  tbl_n_usuario.addHook('beforeCreate',generateHash);
+  //beforeCreate: generateHash
+  // tbl_n_usuario.addHook('beforeUpdate',generateHash);
+  tbl_n_usuario.beforeUpdate(
+    async (usuario) => await generateHash(usuario)
+  )
+  
+  
+  tbl_n_usuario.prototype.validPassword=function(password) {
+    let hash = bcrypt.hash(password, 12, function(err, hash){
+      if(err){
+        console.log('error', err)
+      }
+      else{
+        // console.log("el hash: ", hash);
+        return hash;
+      }
     });
-}
-
-tbl_n_usuario.prototype.validPassword=function(password) {
-  let hash = bcrypt.hash(password, 12, function(err, hash){
-    if(err){
-      console.log('error', err)
-    }
-    else{
-      console.log("el hash: ", hash);
-      return hash;
-    }
-  });
-  // console.log( "el hash: ", hash);
-  return bcrypt.compareSync(password, this.CONTRASENIA_USUARIO);
-}        
-
+    // console.log( "el hash: ", hash);
+    return bcrypt.compareSync(password, this.CONTRASENIA_USUARIO);
+  }        
+  
   return tbl_n_usuario;
 };

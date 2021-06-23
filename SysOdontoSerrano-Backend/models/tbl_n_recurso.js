@@ -34,6 +34,10 @@ module.exports = function(sequelize, DataTypes) {
     RECURSO_ACTIVO: {
       type: DataTypes.BOOLEAN,
       allowNull: false
+    },
+    RUTA_RECURSO: {
+      type: DataTypes.STRING(30),
+      allowNull: false
     }
   }, {
     sequelize,

@@ -20,7 +20,7 @@ module.exports = function(sequelize, DataTypes) {
       }
     },
     ROL_USUARIO_ACTIVO: {
-      type: DataTypes.BOOLEAN,
+      type: DataTypes.TINYINT,
       allowNull: false
     }
   }, {
