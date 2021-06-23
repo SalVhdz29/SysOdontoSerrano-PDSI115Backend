@@ -39,9 +39,7 @@ const usuarios_registrados = async(req, res)=>{
 
         if(usuarios_registrados.length !=0)
         {
-            console.log("ENTRAMOS EN USUARIOS_REGISTRADOS");
-            //usuarios_registrados.map(async usuario_r_it =>{
-            console.log("USUARIOS REGISTRADOS: ", usuarios_registrados);
+           
             for(let usuario_r_it of usuarios_registrados){
 
                 let { ID_USUARIO,
@@ -52,7 +50,7 @@ const usuarios_registrados = async(req, res)=>{
                     USUARIO_ACTIVO
                     } = usuario_r_it;
 
-                console.log("EL NOMBRE: ", NOMBRE_USUARIO);
+               
 
                 let id_usuario = ID_USUARIO;
                 let nombre_usuario = NOMBRE_USUARIO;
@@ -69,17 +67,17 @@ const usuarios_registrados = async(req, res)=>{
 
                 let empleado_correspondiente = empleados_registrados.filter(emp_it => emp_it.ID_EMPLEADO == ID_EMPLEADO );
                 
-                console.log("EL EMPLADOCO: ", empleado_correspondiente);
+          
                 if(empleado_correspondiente.length != 0)
                 {
                     id_persona = empleado_correspondiente[0].ID_PERSONA;
-                    console.log("EL ID PERSONA: ", id_persona);
+                   
 
                     const persona = await Entity.tbl_n_persona.findByPk(id_persona);
 
-                    console.log("LA PERSONA: ", persona);
+                    
                     nombre_empleado = persona.NOMBRE_PERSONA + " " + persona.APELLIDO_PERSONA;
-                    console.log("NOMBRE PERSONA: ", nombre_empleado);
+                  
                 }
 
                 let roles_usuario = await Entity.tbl_n_rol.findAll({
@@ -88,14 +86,14 @@ const usuarios_registrados = async(req, res)=>{
                         ROL_USUARIO_ACTIVO: true
                     }
                 });
-                console.log("ROLES ENCONTRADOS: ", roles_usuario);
+           
 
                 if(roles_usuario.length != 0)
                 {
                     roles_usuario.map(rol_it =>{
                         let usuario_rol = usuarios_roles.filter(usuario_ro_it => usuario_ro_it.ID_USUARIO == rol_it.ID_ROL);
 
-                        console.log("LO QUE FILTRO: ", usuario_rol);
+                      
 
                         let { ID_USUARIO, NOMBRE_USUARIO } = usuario_rol[0];
 
@@ -119,7 +117,6 @@ const usuarios_registrados = async(req, res)=>{
                                       usuario_activo
                                      };
 
-                console.log("USUARIO_PIVOTE: ", usuario_pivote);
 
                 lista_usuarios.push(usuario_pivote);
 
@@ -163,7 +160,7 @@ const cambiar_estado_usuario = async(req, res) =>{
         res.status(200).send({message:"OK"});
         }
         else{
-            console.log("VINO A IGUALES");
+           
             res.status(200).send({message:" No puede actualizar el estado en sesion"});
         }
 
@@ -232,7 +229,7 @@ const lista_empleados_activos = async(req,res)=>{
             }
         });
 
-        console.log("EMPLEADOS ACTIVOS: ", empleados_activos);
+     
         //obteniendo id's de empleados con usuario.
         if(usuarios_registrados.length != 0)
         {
@@ -244,7 +241,7 @@ const lista_empleados_activos = async(req,res)=>{
                     }
                 }
         }
-       console.log("EMPLEADOS DE USUARIOS: ", lista_empleados_usuarios)
+   
 
         //filtrando empleados sin usuario.
         if(lista_empleados_usuarios.length != 0)
@@ -289,7 +286,7 @@ const lista_empleados_activos = async(req,res)=>{
                     lista_empleados_activos.push(empleado);
                 }
         }
-        console.log("ANTES DE ENVIAR: ",lista_empleados_activos);
+       
       
 
         res.status(200).send(lista_empleados_activos);
@@ -317,7 +314,7 @@ const crear_usuario = async(req, res) =>{
             id_f_empleado
         } = req.body;
 
-        console.log("lo obtenido: ", req.body);
+       
         let fecha_hoy = DateTime.now();
 
         let tipo_usuario = await Entity.tbl_n_tipo_usuario.findByPk(1);
@@ -335,17 +332,7 @@ const crear_usuario = async(req, res) =>{
         });
 
         let id_usuario_creado = nuevo_usuario.ID_USUARIO;
-        console.log("ID_USUARIO: ", id_usuario_creado);
-        // let contrasenia_hash = await nuevo_usuario.generateHash(contrasenia);
-        // console.log("contrasenia hash: ", contrasenia_hash);
-
-        // nuevo_usuario = await Entity.tbl_n_usuario.update({
-        //     CONTRASENIA_USUARIO: contrasenia_hash
-        // },{
-        //     where:{
-        //         ID_USUARIO: id_usuario
-        //     }
-        // })
+      
 
         //relacionando roles con el usuario.
 
@@ -396,7 +383,7 @@ const actualizar_usuario =async(req, res) =>{
             editar_contrasenia
         } = req.body;
 
-        console.log("LO OBTENIDO: ", req.body);
+        
 
         let fecha_hoy = DateTime.now();
         let usuario=null;
@@ -436,8 +423,7 @@ const actualizar_usuario =async(req, res) =>{
                     }
                 });
 
-                console.log("LOS ROLES ACCT: ", roles_usuario);
-                console.log("LOS QUE LLEGAN: ", roles);
+              
 
                 //actualizandoo roles antiguos.
                 roles_usuario.map(async rol_it =>{
@@ -447,7 +433,7 @@ const actualizar_usuario =async(req, res) =>{
 
                     if(busqueda.length != 0)
                     {
-                        console.log("ENCONTRO: ", rol_it.ID_ROL);
+                      
                         let resultado = await Entity.tbl_n_rol.update({
                             ROL_USUARIO_ACTIVO: true
                         },{
@@ -459,7 +445,7 @@ const actualizar_usuario =async(req, res) =>{
 
                     }
                     else{
-                        console.log("no ENCONTRO: ", rol_it.ID_ROL);
+                       
                         let resultado = await Entity.tbl_n_rol.update({
                             ROL_USUARIO_ACTIVO: false
                         },{
@@ -487,7 +473,7 @@ const actualizar_usuario =async(req, res) =>{
 
                     if(rol_existente.length == 0)
                     {
-                        console.log("CREO EL ROL: ", id_usuario_rol)
+                       
                         let rol_creado = await Entity.tbl_n_rol.create({
                             ID_ROL: id_usuario_rol,
                             ID_USUARIO: id_usuario,

@@ -55,56 +55,64 @@ const _NuevoExpediente = async(req, res) =>{
 }
 const _UpdateExpediente = async(req, res) =>{
 
-     var correo = req.body.correo;
-     var contacto = req.body.telefono;
+     //var correo = req.body.correo;
+     //var contacto = req.body.telefono;
      var direccion = req.body.direccion;
      var id_exp = req.body.id_expediente;
+     var { nombre_paciente, correo, direccion, apellido_paciente, id_expediente, telefono} = req.body;
+    
       
-    let expediente_con = await Entity.tbl_n_expediente.findAll({
-        where:{
-            ID_EXPEDIENTE: id_exp
-        }
-    });
+    let expediente_con = await Entity.tbl_n_expediente.findByPk(id_expediente);
+
     let paciente_con = await Entity.tbl_n_paciente.findAll({
         where:{
-            ID_PACIENTE: expediente_con[0].ID_PACIENTE
+            ID_PACIENTE: expediente_con.ID_PACIENTE
         }
     });
+  
     const persona = await Entity.tbl_n_persona.findAll({
         where:{
             ID_PERSONA: paciente_con[0].ID_PERSONA
         }
     });
-    
-    let paciente_consulta = await Entity.tbl_n_paciente.findAll({
-        where:{
-            ID_PERSONA: persona[0].ID_PERSONA
-        }
-    });
+
     let detalle_persona_consulta = await Entity.tbl_n_detalle_persona.findAll({
         where:{
             ID_PERSONA: persona[0].ID_PERSONA
         }
     });
-
+    let id_persona = persona[0].ID_PERSONA;
+    let id_paciente = paciente_con[0].ID_PACIENTE;
+    let id_detalle = detalle_persona_consulta[0].ID_DETALLE_PERSONA;
+  
     let paciente = await Entity.tbl_n_paciente.update(
         {
-        CORREO_ELECTRONICO_PACIENTE: correo
+        CORREO_ELECTRONICO_PACIENTE: correo,
+      
         },{
         where:{
-        ID_PERSONA: persona[0].ID_PERSONA,
-    }
-    });
-        let detalle_persona = await Entity.tbl_n_detalle_persona.update(
+        ID_PACIENTE: id_paciente
+    }});
+
+    let persona_r = await Entity.tbl_n_persona.update(
         {
-            NUMERO_DE_CONTACTO: contacto,
+            NOMBRE_PERSONA: nombre_paciente,
+            APELLIDO_PERSONA: apellido_paciente
+        },
+        {
+            where:{
+                ID_PERSONA: id_persona
+            }
+        });
+
+        let detalle_persona = await Entity.tbl_n_detalle_persona.update({
+            NUMERO_DE_CONTACTO: telefono,
             DIRECCION: direccion
         },{
         where:{
-            ID_PERSONA: persona[0].ID_PERSONA
-        }
-    });
-           
+            ID_DETALLE_PERSONA: id_detalle
+        }});
+
     res.status(200).send({message:"Actualicion completada del servidor"});
 }
 const _ObtenerExpediente = async(req, res) =>{
