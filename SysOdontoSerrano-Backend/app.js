@@ -39,6 +39,6 @@ app.use(function (req, res, next) {
     next();
 });
 
-app.use("/api", api);
+app.use("", api);
 
 module.exports = app
