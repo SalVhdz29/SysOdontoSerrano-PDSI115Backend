@@ -16,6 +16,14 @@ api.post("/expediente",expediente._NuevoExpediente);
 api.post("/update_expediente",expediente._UpdateExpediente);
 api.post("/obtener_expediente",expediente._ObtenerExpediente);
 api.post("/obtener_un_expediente",expediente._ObtenerUnExpediente);
+
+
+
+api.post("/obtener_piezas",expediente._ObtenerPiezas);
+
+
+
+
 //endpoint
 api.get("/hola", ejemplo_Ctrl.saludoMundo);
 //endpoint con parametros en URL (por ser get).
