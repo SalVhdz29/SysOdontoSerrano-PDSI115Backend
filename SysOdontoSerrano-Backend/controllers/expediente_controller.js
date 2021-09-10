@@ -128,7 +128,7 @@ const _ObtenerExpediente = async(req, res) =>{
     });
 
     let re_servicio = [];
-    re_servicio = servicio_update_expediente.obtenerExpedientes(paciente_consulta,persona_consulta,detalle_persona_consulta,expediente_consulta,piezas_consulta);
+    re_servicio = servicio_update_expediente.obtenerExpedientes(paciente_consulta,persona_consulta,detalle_persona_consulta,expediente_consulta);
 
     res.status(200).send(re_servicio);
 }
