@@ -10,12 +10,19 @@ const authMiddleware = require('../middlewares/authMiddleware');
 const rol_controller = require("../controllers/rol_controller");
 const tiporecurso_controller = require("../controllers/tiporecurso_controller");
 const expediente = require("../controllers/expediente_controller");
+const insumo = require("../controllers/insumo_controller");
 const recurso_controller = require("../controllers/recurso_controller");
 
 api.post("/expediente",expediente._NuevoExpediente);
 api.post("/update_expediente",expediente._UpdateExpediente);
 api.post("/obtener_expediente",expediente._ObtenerExpediente);
 api.post("/obtener_un_expediente",expediente._ObtenerUnExpediente);
+
+
+api.post("/insumo",insumo._Nuevoinsumo);
+api.post("/update_insumo",insumo._Updateinsumo);
+api.post("/obtener_insumo",insumo._Obtenerinsumo);
+api.post("/obtener_un_insumo",insumo._ObtenerUninsumo);
 //endpoint
 api.get("/hola", ejemplo_Ctrl.saludoMundo);
 //endpoint con parametros en URL (por ser get).
