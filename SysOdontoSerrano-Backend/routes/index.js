@@ -11,6 +11,7 @@ const rol_controller = require("../controllers/rol_controller");
 const tiporecurso_controller = require("../controllers/tiporecurso_controller");
 const expediente = require("../controllers/expediente_controller");
 const recurso_controller = require("../controllers/recurso_controller");
+const inventario_controller = require("../controllers/inventario_controller");
 
 api.post("/expediente",expediente._NuevoExpediente);
 api.post("/update_expediente",expediente._UpdateExpediente);
@@ -58,7 +59,12 @@ api.post("/crear_usuario", authMiddleware._isAuth, usuario_controller.crear_usua
 //actualizar usuario
 api.post("/actualizar_usuario", authMiddleware._isAuth, usuario_controller.actualizar_usuario);
 
-
+//Lista de lotes en Inventario ---- Inventario. 
+api.post("/lista_lotes_inventario",authMiddleware._isAuth, inventario_controller.tabla_inventario);
+//Tabla del historial de lotes
+api.post("/lista_lotes_historial",authMiddleware._isAuth, inventario_controller.tabla_historial);
+//Creacion de un nuevo lote
+api.post("/crear_lote",authMiddleware._isAuth, inventario_controller.crear_lote);
 
 ////////   rutas para Controlador tiporecurso  /////////
 
