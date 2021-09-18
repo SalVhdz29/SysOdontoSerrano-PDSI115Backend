@@ -33,10 +33,11 @@ const servicios_registrados = async(req, res)=>{
                 let { ID_SERVICIO,
                     NOMBRE_SERVICIO,
                     DESCRIPCION_SERVICIO,
-                    FECHA_CREACION_SERVICIO,
+                    COSTO_SERVICIO,
+                    PRECIO_SERVICIO,
+                    MINIMO_NUMERO_CITAS,
+                    MAXIMO_NUMERO_CITAS,
                     SERVICIO_ACTIVO,
-                    RUTA_SERVICIO,
-                    ID_TIPO_SERVICIO
                     } = servicio_r_it;
 
                 // console.log("EL NOMBRE: ", NOMBRE_SERVICIO);
@@ -44,23 +45,20 @@ const servicios_registrados = async(req, res)=>{
                 let id_servicio = ID_SERVICIO;
                 let nombre_servicio= NOMBRE_SERVICIO;
                 let descripcion_servicio = DESCRIPCION_SERVICIO;
-                let fecha_creacion_servicio = FECHA_CREACION_SERVICIO;
+                let costo_servicio = COSTO_SERVICIO;
+                let precio_servicio = PRECIO_SERVICIO;
+                let minimo_numero_citas = MINIMO_NUMERO_CITAS;
+                let maximo_numero_citas = MAXIMO_NUMERO_CITAS;
                 let servicio_activo = SERVICIO_ACTIVO;
-                let ruta_servicio = RUTA_SERVICIO;
-                let id_tipo_servicio = ID_TIPO_SERVICIO
-
-                let tipo_servicio = await Entity.tbl_n_tipo_servicio.findByPk(id_tipo_servicio);
-                let nombre_tipo_servicio = tipo_servicio.NOMBRE_TIPO_SERVICIO;
-                
-
 
                 let servicio_pivote = {id_servicio,
                                       nombre_servicio,
                                       descripcion_servicio,
-                                      fecha_creacion_servicio,
+                                      costo_servicio,
+                                      precio_servicio,
+                                      minimo_numero_citas,
+                                      maximo_numero_citas,
                                       servicio_activo,
-                                      ruta_servicio,
-                                      tipo_servicio:{id_tipo_servicio, nombre_tipo_servicio}
                                      };
 
                 console.log("SERVICIO_PIVOTE: ", servicio_pivote);
@@ -106,7 +104,7 @@ const cambiar_estado_servicio = async(req, res) =>{
         res.status(200).send({message:"OK"});
         }
         else{
-            console.log("VINO A IGUALES");
+            console.log("IGUALES");
             res.status(200).send({message:" No puede actualizar el estado en sesion"});
         }
 
@@ -126,24 +124,20 @@ const crear_servicio = async(req, res) =>{
             nombre_servicio,
             descripcion_servicio,
             servicio_activo,
-            ruta_servicio,
-            tipo_servicio
-        } = req.body;
+            precio_servicio,
+            } = req.body;
 
         console.log("Se muestra: ", req.body);
-        let fecha_hoy = DateTime.now();
-
-        let tipo_servicio_escogido = await Entity.tbl_n_tipo_servicio.findByPk(tipo_servicio);
 
         //creando nuevo servicio
         let nuevo_servicio = await Entity.tbl_n_servicio.create({
             NOMBRE_SERVICIO: nombre_servicio,
-            DESCRIPCION_SERVICIO: descripcion_Servicio,
+            DESCRIPCION_SERVICIO: descripcion_servicio,
+            COSTO_SERVICIO: costo_servicio,
+            PRECIO_SERVICIO: precio_servicio,
+            MINIMO_NUMERO_CITAS: minimo_numero_citas,
+            MAXIMO_NUMERO_CITAS: maximo_numero_citas,
             SERVICIO_ACTIVO: servicio_activo,
-            FECHA_CREACION_SERVICIO: fecha_hoy,
-            FECHA_MODIFICACION_SERVICIO: fecha_hoy,
-            ID_TIPO_SERVICIO: tipo_servicio_escogido.ID_TIPO_SERVICIO,
-            RUTA_SERVICIO: ruta_Servicio
         });
 
         let id_servicio_creado = nuevo_servicio.ID_SERVICIO;
@@ -168,26 +162,25 @@ const actualizar_servicio =async(req, res) =>{
             id_servicio,
             nombre_servicio,
             descripcion_servicio,
+            costo_servicio,
+            precio_servicio,
+            maximo_numero_citas,
+            minimo_numero_citas,
             servicio_activo,
-            tipo_servicio,
-            ruta_servicio
         } = req.body;
 
         console.log("Se muestra: ", req.body);
-
-        let tipo_servicio_escogido = await Entity.tbl_n_tipo_servicio.findByPk(tipo_servicio);
-
-        let fecha_hoy = DateTime.now();
         let servicio=null;
         //actualización de servicio
 
             servicio = await Entity.tbl_n_servicio.update({
                 NOMBRE_SERVICIO: nombre_servicio,
                 DESCRIPCION_SERVICIO: descripcion_servicio,
+                COSTO_SERVICIO: costo_servicio,
+                PRECIO_SERVICIO: precio_servicio,
+                MAXIMO_NUMERO_CITAS: maximo_numero_citas,
+                MINIMO_NUMERO_CITAS: minimo_numero_citas,
                 SERVICIO_ACTIVO: servicio_activo,
-                FECHA_MODIFICACION_SERVICIO: fecha_hoy,
-                ID_TIPO_SERVICIO: tipo_servicio_escogido.ID_TIPO_SERVICIO,
-                RUTA_SERVICIO: ruta_Servicio
             },{where:{
                 ID_SERVICIO: id_servicio
             }});
@@ -200,27 +193,11 @@ const actualizar_servicio =async(req, res) =>{
 
 }
 
-//lista de tipos servicio.
-
-const lista_tipos_servicio = async(req, res) =>{
-    try{
-        const tipos_servicio_registrados = await Entity.tbl_n_tipo_servicio.findAll();
-
-        res.status(200).send({tipos_servicio_registrados});
-    }catch(e)
-    {
-        console.log(e);
-        res.status(500).send({errorMessage: "Ha ocurrido un error en el servidor."});
-    }
-}
-
-
-
 module.exports={
     crear_servicio,
     actualizar_servicio,
     servicios_registrados,
     cambiar_estado_servicio,
-    lista_tipos_servicio
+
 }
 
