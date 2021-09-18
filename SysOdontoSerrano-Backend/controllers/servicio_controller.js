@@ -193,7 +193,7 @@ const actualizar_servicio =async(req, res) =>{
 
 }
 
-module.exports={
+ module.exports={
     crear_servicio,
     actualizar_servicio,
     servicios_registrados,
