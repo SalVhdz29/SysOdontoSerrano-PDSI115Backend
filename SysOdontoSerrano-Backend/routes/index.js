@@ -11,6 +11,7 @@ const rol_controller = require("../controllers/rol_controller");
 const tiporecurso_controller = require("../controllers/tiporecurso_controller");
 const expediente = require("../controllers/expediente_controller");
 const recurso_controller = require("../controllers/recurso_controller");
+const servicio_controller= require("../controllers/servicio_controller");
 
 api.post("/expediente",expediente._NuevoExpediente);
 api.post("/update_expediente",expediente._UpdateExpediente);
@@ -82,9 +83,21 @@ api.post("/actualizar_tipo_recurso", authMiddleware._isAuth, tiporecurso_control
 //authMiddleware._isAuth,
 
 
+///--- SERVICIOS ---///
 
+//Servicios Registrados 
+api.post("/servicios_registrados",authMiddleware._isAuth, servicio_controller.servicios_registrados);
 
-//Lista de servicios
+//Cambio estado de Servicio
+api.post("/cambiar_estado_servicio", authMiddleware._isAuth, servicio_controller.cambiar_estado_servicio);
+
+//Creacion de Servicio
+api.post("/crear_servicio", authMiddleware._isAuth, servicio_controller.crear_servicio);
+
+//Actualizar Servicio
+api.post("/actualizar_servicio", authMiddleware._isAuth, servicio_controller.actualizar_servicio);
+
+///////////-----------///////////
 
 //Recursos registrados
 api.post("/recursos_registrados", authMiddleware._isAuth, recurso_controller.recursos_registrados);
