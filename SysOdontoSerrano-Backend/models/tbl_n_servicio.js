@@ -30,7 +30,11 @@ module.exports = function(sequelize, DataTypes) {
     MAXIMO_NUMERO_CITAS: {
       type: DataTypes.INTEGER,
       allowNull: true
-    }
+    },
+    SERVICIO_ACTIVO: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false
+    },
   }, {
     sequelize,
     tableName: 'tbl_n_servicio',
