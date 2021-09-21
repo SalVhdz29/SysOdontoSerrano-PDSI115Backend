@@ -1,9 +1,11 @@
 
 'use strict'
 // importamos mediante require modelos y librerias necesarias.
+const { DateTime } = require("luxon");
 
 //Conexión a BD.
 const {sequelize} = require('../models/index.js');
+
 //importamos modelo para usuarios.
 let init_models= require("../models/init-models");
 //Servicio
@@ -23,6 +25,11 @@ const _NuevoExpediente = async(req, res) =>{
     var dui = req.body.dui;
     var direccion = req.body.direccion;
     var fecha = req.body.ultima_fecha;
+
+    fecha= DateTime.fromJSDate(fecha)
+    fecha_nacimiento = DateTime.fromJSDate(fecha_nacimiento)
+
+    try{
     
 
     let persona = await Entity.tbl_n_persona.create({
@@ -50,8 +57,20 @@ const _NuevoExpediente = async(req, res) =>{
         FECHA_CREACION_EXPEDIENTE: fecha
     });
 
+    let { ID_EXPEDIENTE } = expediente;
+
+    let saldo = await Entity.tbl_n_saldo.create({
+        ID_F_EXPEDIENTE: ID_EXPEDIENTE,
+        SALDO: parseFloat(0.00)
+    });
+
 
     res.status(200).send({message:"Se guardo expediente"});
+}
+catch(e)
+{
+    console.log("error al crear expediente: ", e)
+}
 }
 const _UpdateExpediente = async(req, res) =>{
 
@@ -116,7 +135,7 @@ const _UpdateExpediente = async(req, res) =>{
     res.status(200).send({message:"Actualicion completada del servidor"});
 }
 const _ObtenerExpediente = async(req, res) =>{
-
+    console.log("ff")
     let persona_consulta = await Entity.tbl_n_persona.findAll({
     });
     let detalle_persona_consulta = await Entity.tbl_n_detalle_persona.findAll({

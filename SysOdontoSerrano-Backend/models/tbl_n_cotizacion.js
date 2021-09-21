@@ -7,12 +7,12 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       primaryKey: true
     },
-    ID_F_TRATAMIENTO: {
+    ID_EXPEDIENTE: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'tbl_n_tratamiento',
-        key: 'ID_TRATAMIENTO'
+        model: 'tbl_n_expediente',
+        key: 'ID_EXPEDIENTE'
       }
     },
     TOTAL_ESTIMADO: {
@@ -33,10 +33,10 @@ module.exports = function(sequelize, DataTypes) {
         ]
       },
       {
-        name: "FK_SE_HACE_UN",
+        name: "FK_COTIZA_SERVICIOS",
         using: "BTREE",
         fields: [
-          { name: "ID_F_TRATAMIENTO" },
+          { name: "ID_EXPEDIENTE" },
         ]
       },
     ]

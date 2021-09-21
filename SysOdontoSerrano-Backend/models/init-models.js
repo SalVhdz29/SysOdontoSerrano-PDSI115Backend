@@ -22,12 +22,12 @@ var _tbl_n_rol = require("./tbl_n_rol");
 var _tbl_n_saldo = require("./tbl_n_saldo");
 var _tbl_n_servicio = require("./tbl_n_servicio");
 var _tbl_n_servicio_insumo = require("./tbl_n_servicio_insumo");
+var _tbl_n_servicio_pago = require("./tbl_n_servicio_pago");
 var _tbl_n_sesion = require("./tbl_n_sesion");
 var _tbl_n_tipo_pago = require("./tbl_n_tipo_pago");
 var _tbl_n_tipo_recurso = require("./tbl_n_tipo_recurso");
 var _tbl_n_tipo_usuario = require("./tbl_n_tipo_usuario");
 var _tbl_n_transaccion_insumo = require("./tbl_n_transaccion_insumo");
-var _tbl_n_tratamiento = require("./tbl_n_tratamiento");
 var _tbl_n_usuario = require("./tbl_n_usuario");
 
 function initModels(sequelize) {
@@ -54,22 +54,24 @@ function initModels(sequelize) {
   var tbl_n_saldo = _tbl_n_saldo(sequelize, DataTypes);
   var tbl_n_servicio = _tbl_n_servicio(sequelize, DataTypes);
   var tbl_n_servicio_insumo = _tbl_n_servicio_insumo(sequelize, DataTypes);
+  var tbl_n_servicio_pago = _tbl_n_servicio_pago(sequelize, DataTypes);
   var tbl_n_sesion = _tbl_n_sesion(sequelize, DataTypes);
   var tbl_n_tipo_pago = _tbl_n_tipo_pago(sequelize, DataTypes);
   var tbl_n_tipo_recurso = _tbl_n_tipo_recurso(sequelize, DataTypes);
   var tbl_n_tipo_usuario = _tbl_n_tipo_usuario(sequelize, DataTypes);
   var tbl_n_transaccion_insumo = _tbl_n_transaccion_insumo(sequelize, DataTypes);
-  var tbl_n_tratamiento = _tbl_n_tratamiento(sequelize, DataTypes);
   var tbl_n_usuario = _tbl_n_usuario(sequelize, DataTypes);
 
   tbl_n_recurso.belongsToMany(tbl_n_usuario, { as: 'ID_USUARIO_tbl_n_usuarios', through: permiso, foreignKey: "ID_RECURSO", otherKey: "ID_USUARIO" });
   tbl_n_usuario.belongsToMany(tbl_n_recurso, { as: 'ID_RECURSO_tbl_n_recursos', through: permiso, foreignKey: "ID_USUARIO", otherKey: "ID_RECURSO" });
-  tbl_n_usuario.belongsToMany(tbl_n_usuario, { as: 'ID_USUARIO_tbl_n_usuarios', through: tbl_n_rol, foreignKey: "ID_ROL", otherKey: "ID_USUARIO" });
+  tbl_n_usuario.belongsToMany(tbl_n_usuario, { as: 'ID_USUARIO_tbl_n_usuario_tbl_n_rols', through: tbl_n_rol, foreignKey: "ID_ROL", otherKey: "ID_USUARIO" });
   tbl_n_usuario.belongsToMany(tbl_n_usuario, { as: 'ID_ROL_tbl_n_usuarios', through: tbl_n_rol, foreignKey: "ID_USUARIO", otherKey: "ID_ROL" });
+  tbl_n_servicio_pago.belongsTo(tb_n_pago_sesion, { as: "ID_PAGO_SESION_tb_n_pago_sesion", foreignKey: "ID_PAGO_SESION"});
+  tb_n_pago_sesion.hasMany(tbl_n_servicio_pago, { as: "tbl_n_servicio_pagos", foreignKey: "ID_PAGO_SESION"});
+  tbl_n_transaccion_insumo.belongsTo(tb_n_pago_sesion, { as: "ID_F_PAGO_SESION_tb_n_pago_sesion", foreignKey: "ID_F_PAGO_SESION"});
+  tb_n_pago_sesion.hasMany(tbl_n_transaccion_insumo, { as: "tbl_n_transaccion_insumos", foreignKey: "ID_F_PAGO_SESION"});
   tbl_n_cotizacion_servicio.belongsTo(tbl_n_cotizacion, { as: "ID_F_COTIZACION_tbl_n_cotizacion", foreignKey: "ID_F_COTIZACION"});
   tbl_n_cotizacion.hasMany(tbl_n_cotizacion_servicio, { as: "tbl_n_cotizacion_servicios", foreignKey: "ID_F_COTIZACION"});
-  tbl_n_sesion.belongsTo(tbl_n_cotizacion, { as: "ID_F_COTIZACION_tbl_n_cotizacion", foreignKey: "ID_F_COTIZACION"});
-  tbl_n_cotizacion.hasMany(tbl_n_sesion, { as: "tbl_n_sesions", foreignKey: "ID_F_COTIZACION"});
   tbl_n_pieza.belongsTo(tbl_n_cuadrante, { as: "ID_F_CUADRANTE_tbl_n_cuadrante", foreignKey: "ID_F_CUADRANTE"});
   tbl_n_cuadrante.hasMany(tbl_n_pieza, { as: "tbl_n_piezas", foreignKey: "ID_F_CUADRANTE"});
   tbl_n_usuario.belongsTo(tbl_n_empleado, { as: "ID_EMPLEADO_tbl_n_empleado", foreignKey: "ID_EMPLEADO"});
@@ -88,12 +90,14 @@ function initModels(sequelize) {
   tbl_n_estado_seccion.hasMany(tbl_n_pieza_paciente, { as: "LC_ID_F_ESTADO_SECCION_tbl_n_pieza_pacientes", foreignKey: "LC_ID_F_ESTADO_SECCION"});
   tbl_n_sesion.belongsTo(tbl_n_estado_sesion, { as: "ID_F_ESTADO_SESION_tbl_n_estado_sesion", foreignKey: "ID_F_ESTADO_SESION"});
   tbl_n_estado_sesion.hasMany(tbl_n_sesion, { as: "tbl_n_sesions", foreignKey: "ID_F_ESTADO_SESION"});
+  tbl_n_cotizacion.belongsTo(tbl_n_expediente, { as: "ID_EXPEDIENTE_tbl_n_expediente", foreignKey: "ID_EXPEDIENTE"});
+  tbl_n_expediente.hasMany(tbl_n_cotizacion, { as: "tbl_n_cotizacions", foreignKey: "ID_EXPEDIENTE"});
   tbl_n_ficha_clinica.belongsTo(tbl_n_expediente, { as: "ID_F_EXPEDIENTE_tbl_n_expediente", foreignKey: "ID_F_EXPEDIENTE"});
   tbl_n_expediente.hasMany(tbl_n_ficha_clinica, { as: "tbl_n_ficha_clinicas", foreignKey: "ID_F_EXPEDIENTE"});
   tbl_n_saldo.belongsTo(tbl_n_expediente, { as: "ID_F_EXPEDIENTE_tbl_n_expediente", foreignKey: "ID_F_EXPEDIENTE"});
   tbl_n_expediente.hasMany(tbl_n_saldo, { as: "tbl_n_saldos", foreignKey: "ID_F_EXPEDIENTE"});
-  tbl_n_tratamiento.belongsTo(tbl_n_expediente, { as: "ID_F_EXPEDIENTE_tbl_n_expediente", foreignKey: "ID_F_EXPEDIENTE"});
-  tbl_n_expediente.hasMany(tbl_n_tratamiento, { as: "tbl_n_tratamientos", foreignKey: "ID_F_EXPEDIENTE"});
+  tbl_n_sesion.belongsTo(tbl_n_expediente, { as: "ID_EXPEDIENTE_tbl_n_expediente", foreignKey: "ID_EXPEDIENTE"});
+  tbl_n_expediente.hasMany(tbl_n_sesion, { as: "tbl_n_sesions", foreignKey: "ID_EXPEDIENTE"});
   tbl_n_pieza_paciente.belongsTo(tbl_n_ficha_clinica, { as: "ID_F_FICHA_CLINICA_tbl_n_ficha_clinica", foreignKey: "ID_F_FICHA_CLINICA"});
   tbl_n_ficha_clinica.hasMany(tbl_n_pieza_paciente, { as: "tbl_n_pieza_pacientes", foreignKey: "ID_F_FICHA_CLINICA"});
   tbl_n_lote.belongsTo(tbl_n_insumo, { as: "ID_F_INSUMO_tbl_n_insumo", foreignKey: "ID_F_INSUMO"});
@@ -118,18 +122,18 @@ function initModels(sequelize) {
   tbl_n_servicio.hasMany(tbl_n_cotizacion_servicio, { as: "tbl_n_cotizacion_servicios", foreignKey: "ID_F_SERVICIO"});
   tbl_n_servicio_insumo.belongsTo(tbl_n_servicio, { as: "ID_F_SERVICIO_tbl_n_servicio", foreignKey: "ID_F_SERVICIO"});
   tbl_n_servicio.hasMany(tbl_n_servicio_insumo, { as: "tbl_n_servicio_insumos", foreignKey: "ID_F_SERVICIO"});
+  tbl_n_servicio_pago.belongsTo(tbl_n_servicio, { as: "ID_SERVICIO_tbl_n_servicio", foreignKey: "ID_SERVICIO"});
+  tbl_n_servicio.hasMany(tbl_n_servicio_pago, { as: "tbl_n_servicio_pagos", foreignKey: "ID_SERVICIO"});
+  tbl_n_sesion.belongsTo(tbl_n_servicio, { as: "ID_SERVICIO_tbl_n_servicio", foreignKey: "ID_SERVICIO"});
+  tbl_n_servicio.hasMany(tbl_n_sesion, { as: "tbl_n_sesions", foreignKey: "ID_SERVICIO"});
   tb_n_pago_sesion.belongsTo(tbl_n_sesion, { as: "ID_F_SESION_tbl_n_sesion", foreignKey: "ID_F_SESION"});
   tbl_n_sesion.hasMany(tb_n_pago_sesion, { as: "tb_n_pago_sesions", foreignKey: "ID_F_SESION"});
-  tbl_n_transaccion_insumo.belongsTo(tbl_n_sesion, { as: "ID_F_SESION_tbl_n_sesion", foreignKey: "ID_F_SESION"});
-  tbl_n_sesion.hasMany(tbl_n_transaccion_insumo, { as: "tbl_n_transaccion_insumos", foreignKey: "ID_F_SESION"});
   tb_n_pago_sesion.belongsTo(tbl_n_tipo_pago, { as: "ID_TIPO_PAGO_tbl_n_tipo_pago", foreignKey: "ID_TIPO_PAGO"});
   tbl_n_tipo_pago.hasMany(tb_n_pago_sesion, { as: "tb_n_pago_sesions", foreignKey: "ID_TIPO_PAGO"});
   tbl_n_recurso.belongsTo(tbl_n_tipo_recurso, { as: "ID_TIPO_RECURSO_tbl_n_tipo_recurso", foreignKey: "ID_TIPO_RECURSO"});
   tbl_n_tipo_recurso.hasMany(tbl_n_recurso, { as: "tbl_n_recursos", foreignKey: "ID_TIPO_RECURSO"});
   tbl_n_usuario.belongsTo(tbl_n_tipo_usuario, { as: "ID_TIPO_USUARIO_tbl_n_tipo_usuario", foreignKey: "ID_TIPO_USUARIO"});
   tbl_n_tipo_usuario.hasMany(tbl_n_usuario, { as: "tbl_n_usuarios", foreignKey: "ID_TIPO_USUARIO"});
-  tbl_n_cotizacion.belongsTo(tbl_n_tratamiento, { as: "ID_F_TRATAMIENTO_tbl_n_tratamiento", foreignKey: "ID_F_TRATAMIENTO"});
-  tbl_n_tratamiento.hasMany(tbl_n_cotizacion, { as: "tbl_n_cotizacions", foreignKey: "ID_F_TRATAMIENTO"});
   permiso.belongsTo(tbl_n_usuario, { as: "ID_USUARIO_tbl_n_usuario", foreignKey: "ID_USUARIO"});
   tbl_n_usuario.hasMany(permiso, { as: "permisos", foreignKey: "ID_USUARIO"});
   tbl_n_rol.belongsTo(tbl_n_usuario, { as: "ID_ROL_tbl_n_usuario", foreignKey: "ID_ROL"});
@@ -161,12 +165,12 @@ function initModels(sequelize) {
     tbl_n_saldo,
     tbl_n_servicio,
     tbl_n_servicio_insumo,
+    tbl_n_servicio_pago,
     tbl_n_sesion,
     tbl_n_tipo_pago,
     tbl_n_tipo_recurso,
     tbl_n_tipo_usuario,
     tbl_n_transaccion_insumo,
-    tbl_n_tratamiento,
     tbl_n_usuario,
   };
 }

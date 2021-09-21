@@ -5,12 +5,15 @@ const api = express.Router();
 const ejemplo_Ctrl = require("../controllers/controlador_ejemplo");
 const auth = require("../controllers/auth");
 const usuario_controller = require("../controllers/usuario_controller");
+const citas_controller = require("../controllers/citas_controller");
+const factura_controller = require("../controllers/factura_controller")
 //middleware de rutas
 const authMiddleware = require('../middlewares/authMiddleware');
 const rol_controller = require("../controllers/rol_controller");
 const tiporecurso_controller = require("../controllers/tiporecurso_controller");
 const expediente = require("../controllers/expediente_controller");
 const recurso_controller = require("../controllers/recurso_controller");
+const estimacion_controller = require("../controllers/estimacion_controller");
 
 api.post("/expediente",expediente._NuevoExpediente);
 api.post("/update_expediente",expediente._UpdateExpediente);
@@ -100,6 +103,21 @@ api.post("/actualizar_recurso", authMiddleware._isAuth, recurso_controller.actua
 
 //Lista tipos recurso
 api.get("/lista_tipos_recurso_g_recurso",authMiddleware._isAuth, recurso_controller.lista_tipos_recurso);
+
+
+//Citas
+api.get("/citas_del_dia", authMiddleware._isAuth, citas_controller.obtenerCitas);
+api.post("/guardar_cita", authMiddleware._isAuth, citas_controller.guardarCita);
+api.get("/obtener_servicios",authMiddleware._isAuth, citas_controller.obtenerServicios);
+api.post("/reprogramar_cita", authMiddleware._isAuth, citas_controller.reprogramarCita);
+
+//factura
+api.get("/obtener_insumos_consumibles", authMiddleware._isAuth, factura_controller.obtenerInsumosConsumibles);
+api.post("/obtener_saldo_cliente", authMiddleware._isAuth, factura_controller.obtenerSaldoCliente);
+api.post("/guardar_factura", authMiddleware._isAuth, factura_controller.guardarFactura);
+
+//estimacion
+api.post("/guardar_estimacion", authMiddleware._isAuth, estimacion_controller.guardarEstimacion);
 module.exports= api;
 
 

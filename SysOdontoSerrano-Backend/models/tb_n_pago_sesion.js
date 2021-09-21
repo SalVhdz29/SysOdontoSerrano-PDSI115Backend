@@ -30,6 +30,10 @@ module.exports = function(sequelize, DataTypes) {
     PAGO_CON_DEUDA: {
       type: DataTypes.BOOLEAN,
       allowNull: true
+    },
+    TOTAL_FACTURA: {
+      type: DataTypes.DECIMAL(10,2),
+      allowNull: true
     }
   }, {
     sequelize,
