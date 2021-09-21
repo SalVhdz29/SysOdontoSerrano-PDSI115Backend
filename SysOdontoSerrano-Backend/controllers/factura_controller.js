@@ -125,6 +125,14 @@ const guardarFactura = async(req, res)=>{
 
         sesion = sesiones[sesiones.length - 1];
 
+        let upd_sesion = await Entity.tbl_n_sesion.update({
+            ID_F_ESTADO_SESION: 2
+        },{
+            where:{
+                ID_SESION: sesion.ID_SESION
+            }
+        })
+
         let n_pago_sesion = await Entity.tb_n_pago_sesion.create({
             ID_F_SESION: sesion.ID_SESION,
             CANTIDAD_PAGADA: cantidad_pagada, // abono o total completo (asumiendo que si tenia saldo deudor tambien se paga sin el deber.)
