@@ -88,13 +88,24 @@ const tabla_historial = async(req, res)=>{
 
                    let { ID_LOTE,
                    CANTIDAD_LOTE,
-                   FECHA_VENCIMIENTO
+                   FECHA_VENCIMIENTO,
+                   CANTIDAD_ACTUAL
                    } = lote_r_it;
 
                     // console.log("LA CANTIDAD: ", CANTIDAD_LOTE); 
 
-                    let n_lote = ID_LOTE; 
-                    let existencia_lote = CANTIDAD_LOTE;
+                    let n_lote = ID_LOTE;
+
+                    let existencia_lote = "";
+                    
+                    if(parseInt(CANTIDAD_ACTUAL) <= parseInt(CANTIDAD_LOTE)){
+                        existencia_lote = "En uso"
+                        if(parseInt(CANTIDAD_ACTUAL) == 0){
+                            existencia_lote = "Terminado"
+                        }
+                    }
+
+                    
                     let fecha_lote = FECHA_VENCIMIENTO; 
 
 
@@ -109,7 +120,8 @@ const tabla_historial = async(req, res)=>{
                lista_historial.push(lote_pivote); 
 
                 } // fin for tabla_historial
-            } 
+            }
+             
         console.log("")
         res.status(200).send(lista_historial); 
 
