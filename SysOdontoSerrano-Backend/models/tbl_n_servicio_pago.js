@@ -1,21 +1,13 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('tbl_n_transaccion_insumo', {
-    ID_TRANSACCION_INSUMO: {
+  return sequelize.define('tbl_n_servicio_pago', {
+    ID_SERVICIO_PAGO: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    ID_LOTE: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'tbl_n_lote',
-        key: 'ID_LOTE'
-      }
-    },
-    ID_F_PAGO_SESION: {
+    ID_PAGO_SESION: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
@@ -23,17 +15,25 @@ module.exports = function(sequelize, DataTypes) {
         key: 'ID_PAGO_SESION'
       }
     },
-    FECHA_TRANSACCION_INSUMO: {
-      type: DataTypes.DATE,
+    ID_SERVICIO: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'tbl_n_servicio',
+        key: 'ID_SERVICIO'
+      }
+    },
+    DEDUCIBLE: {
+      type: DataTypes.DECIMAL(10,2),
       allowNull: true
     },
-    CANTIDAD_INSUMO: {
-      type: DataTypes.INTEGER,
+    SUBTOTAL: {
+      type: DataTypes.DECIMAL(10,2),
       allowNull: true
     }
   }, {
     sequelize,
-    tableName: 'tbl_n_transaccion_insumo',
+    tableName: 'tbl_n_servicio_pago',
     timestamps: false,
     indexes: [
       {
@@ -41,21 +41,21 @@ module.exports = function(sequelize, DataTypes) {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "ID_TRANSACCION_INSUMO" },
+          { name: "ID_SERVICIO_PAGO" },
         ]
       },
       {
-        name: "FK_REGISTRA_DECREMENTOS_DE",
+        name: "FK_REGISTRA_LO_PAGADO",
         using: "BTREE",
         fields: [
-          { name: "ID_LOTE" },
+          { name: "ID_PAGO_SESION" },
         ]
       },
       {
-        name: "FK_REGISTRA_EL_USO",
+        name: "FK_REGISTRA_USOS",
         using: "BTREE",
         fields: [
-          { name: "ID_F_PAGO_SESION" },
+          { name: "ID_SERVICIO" },
         ]
       },
     ]

@@ -30,6 +30,10 @@ module.exports = function(sequelize, DataTypes) {
     MAXIMO_NUMERO_CITAS: {
       type: DataTypes.INTEGER,
       allowNull: true
+    },
+    RESTRICCIONES: {
+      type: DataTypes.STRING(250),
+      allowNull: true
     }
   }, {
     sequelize,
