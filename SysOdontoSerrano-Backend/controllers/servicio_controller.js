@@ -125,6 +125,8 @@ const crear_servicio = async(req, res) =>{
             descripcion_servicio,
             servicio_activo,
             precio_servicio,
+            maximo_numero_citas,
+            minimo_numero_citas
             } = req.body;
 
         console.log("Se muestra: ", req.body);
@@ -133,11 +135,9 @@ const crear_servicio = async(req, res) =>{
         let nuevo_servicio = await Entity.tbl_n_servicio.create({
             NOMBRE_SERVICIO: nombre_servicio,
             DESCRIPCION_SERVICIO: descripcion_servicio,
-            COSTO_SERVICIO: costo_servicio,
             PRECIO_SERVICIO: precio_servicio,
             MINIMO_NUMERO_CITAS: minimo_numero_citas,
             MAXIMO_NUMERO_CITAS: maximo_numero_citas,
-            SERVICIO_ACTIVO: servicio_activo,
         });
 
         let id_servicio_creado = nuevo_servicio.ID_SERVICIO;
@@ -180,7 +180,6 @@ const actualizar_servicio =async(req, res) =>{
                 PRECIO_SERVICIO: precio_servicio,
                 MAXIMO_NUMERO_CITAS: maximo_numero_citas,
                 MINIMO_NUMERO_CITAS: minimo_numero_citas,
-                SERVICIO_ACTIVO: servicio_activo,
             },{where:{
                 ID_SERVICIO: id_servicio
             }});
