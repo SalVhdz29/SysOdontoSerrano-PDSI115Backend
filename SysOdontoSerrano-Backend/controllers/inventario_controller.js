@@ -19,6 +19,8 @@ const tabla_inventario = async(req, res)=>{
  
         //variables de Output. 
         let lista_lotes =[];
+
+        let insumos_agregados =[];
  
         const tabla_inventario = await Entity.tbl_n_lote.findAll({}); 
  
@@ -47,14 +49,38 @@ const tabla_inventario = async(req, res)=>{
 
               // console.log("NOMBRE DEL INSUMO: ", nombre_insumo); 
 
-                                    let lote_pivote = {n_insumo, 
-                                        nombre_insumo,   
+                                    let lote_pivote = {id_insumo:n_insumo, 
+                                        nombre_insumo:nombre_insumo[0].NOMBRE_INSUMO,   
                                         existencia_insumo
                                        };
 
-             //  console.log("LOTE_PIVOTE: ", lote_pivote); 
+             console.log("LOTE_PIVOTE: ", lote_pivote); 
 
-               lista_lotes.push(lote_pivote); 
+            let coincidencia = insumos_agregados.find(it=> it == n_insumo);
+
+            if(coincidencia == null)
+            {
+                lista_lotes.push(lote_pivote); 
+                insumos_agregados.push(n_insumo);
+            }
+            else{
+                let n_lista = [];
+
+                for(let it of lista_lotes)
+                {
+                    let pivote ={...it};
+
+                    if(it.id_insumo == n_insumo)
+                    {
+                       pivote.existencia_insumo = parseInt(it.existencia_insumo) + parseInt(lote_pivote.existencia_insumo);
+                    }
+                    n_lista.push(pivote);
+                }
+
+                lista_lotes = n_lista;
+            }
+
+               
 
            } // fin for tabla_inventario 
        } 
@@ -75,12 +101,20 @@ const tabla_historial = async(req, res)=>{
  
             //variables de Output. 
             let lista_historial =[];
+
+            let {id_insumo} = req.body;
  
-            const tabla_historial = await Entity.tbl_n_lote.findAll({}); 
+            const tabla_historial = await Entity.tbl_n_lote.findAll({
+                where:{
+                    ID_F_INSUMO: id_insumo
+                }
+            }); 
+
+            console.log("LOTES: ", tabla_historial)
  
             if(tabla_historial.length !=0) 
             { 
-                // console.log("ENTRAMOS EN TABLA_HISTORIAL"); 
+                console.log("ENTRAMOS EN TABLA_HISTORIAL"); 
 
                 // console.log("HISTORIAL DE LOTES REGISTRADOS: ", tabla_historial); 
                 for(let lote_r_it of tabla_historial){ 
@@ -92,16 +126,16 @@ const tabla_historial = async(req, res)=>{
                    CANTIDAD_ACTUAL
                    } = lote_r_it;
 
-                    // console.log("LA CANTIDAD: ", CANTIDAD_LOTE); 
+                    console.log("LA CANTIDAD: ", CANTIDAD_LOTE); 
 
                     let n_lote = ID_LOTE;
 
-                    let existencia_lote = "";
+                    let estado_lote = "";
                     
                     if(parseInt(CANTIDAD_ACTUAL) <= parseInt(CANTIDAD_LOTE)){
-                        existencia_lote = "En uso"
+                        estado_lote = "En uso"
                         if(parseInt(CANTIDAD_ACTUAL) == 0){
-                            existencia_lote = "Terminado"
+                            estado_lote = "Terminado"
                         }
                     }
 
@@ -111,11 +145,12 @@ const tabla_historial = async(req, res)=>{
 
                     let lote_pivote = {
                         n_lote, 
-                        existencia_lote,   
+                        estado_lote,
+                        existencia_lote: CANTIDAD_ACTUAL,   
                         fecha_lote
                                     };
 
-                    //  console.log("LOTE_PIVOTE: ", lote_pivote); 
+                    console.log("LOTE_PIVOTE: ", lote_pivote); 
 
                lista_historial.push(lote_pivote); 
 
@@ -126,9 +161,9 @@ const tabla_historial = async(req, res)=>{
         res.status(200).send(lista_historial); 
 
         }
-    catch{
-        //console.log>("EL ERROR: ==> ",e); 
-        res.status(500).send({errorMessage: "Ha ocurrido un error en el servidor."}); 
+    catch(e){
+        console.log>("EL ERROR: ==> ",e); 
+        res.status(500).send({errorMessage: "Ha ocurrido un error en el servidor.", error: e}); 
         } 
     }
 
@@ -142,17 +177,20 @@ const crear_lote = async(req, res)=>{
                 fecha_lote,
                 costo_lote,
                 cantidad_lote,
-                precio_lote
+                precio_lote,
+                id_insumo
             } = req.body;
 
-            //console.log("lo obtenido: ", req.body);
+            console.log("lo obtenido: ", req.body);
 
             //Creando nuevo lote
             let nuevo_lote = await Entity.tbl_n_lote.create({
                 FECHA_VENCIMIENTO: fecha_lote,
                 COSTO_LOTE: costo_lote,
                 CANTIDAD_LOTE: cantidad_lote,
-                PRECIO_EFECTIVO: precio_lote
+                CANTIDAD_ACTUAL: cantidad_lote,
+                PRECIO_EFECTIVO: precio_lote,
+                ID_F_INSUMO: id_insumo
             });
 
             let id_lote_creado = nuevo_lote.ID_LOTE;
@@ -162,8 +200,8 @@ const crear_lote = async(req, res)=>{
            // console.log("LLEGO AL FINAL");
               res.status(200).send({message:"OK"});            
         }
-        catch{
-           // console.log("EL ERROR: ",e); 
+        catch(e){
+           console.log("EL ERROR: ",e); 
             res.status(500).send({errorMessage: "Ha ocurrido un error en el servidor."});
         }
     }
