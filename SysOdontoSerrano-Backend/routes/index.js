@@ -28,6 +28,7 @@ api.post("/insumo",insumo._Nuevoinsumo);
 api.post("/update_insumo",insumo._Updateinsumo);
 api.post("/obtener_insumo",insumo._Obtenerinsumo);
 api.post("/obtener_un_insumo",insumo._ObtenerUninsumo);
+api.post("/obtener_piezas",expediente._ObtenerPiezas);
 //endpoint
 api.get("/hola", ejemplo_Ctrl.saludoMundo);
 //endpoint con parametros en URL (por ser get).

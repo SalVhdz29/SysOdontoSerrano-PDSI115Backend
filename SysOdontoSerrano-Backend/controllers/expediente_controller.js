@@ -135,7 +135,8 @@ const _UpdateExpediente = async(req, res) =>{
     res.status(200).send({message:"Actualicion completada del servidor"});
 }
 const _ObtenerExpediente = async(req, res) =>{
-    console.log("ff")
+
+
     let persona_consulta = await Entity.tbl_n_persona.findAll({
     });
     let detalle_persona_consulta = await Entity.tbl_n_detalle_persona.findAll({
@@ -150,10 +151,13 @@ const _ObtenerExpediente = async(req, res) =>{
 
     res.status(200).send(re_servicio);
 }
+
+
 const _ObtenerUnExpediente = async(req, res) =>{
 
+
     let persona_consulta = await Entity.tbl_n_persona.findAll({
-    });
+    });    
     let detalle_persona_consulta = await Entity.tbl_n_detalle_persona.findAll({
     });
     let expediente_consulta = await Entity.tbl_n_expediente.findAll({
@@ -169,12 +173,27 @@ const _ObtenerUnExpediente = async(req, res) =>{
 
 
     res.status(200).send(re_servicio);
+
 }
+
+const _ObtenerPiezas = async(req, res) =>{
+
+    let piezas_consulta = await Entity.tbl_n_pieza.findAll({
+    });
+
+
+    res.status(200).send(piezas_consulta);
+}
+
+
+
+
 
 module.exports = {
     _NuevoExpediente,
     _UpdateExpediente,
     _ObtenerExpediente,
-    _ObtenerUnExpediente
+    _ObtenerUnExpediente,
+    _ObtenerPiezas
 }
 
