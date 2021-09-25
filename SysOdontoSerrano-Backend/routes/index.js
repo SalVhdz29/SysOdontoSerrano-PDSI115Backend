@@ -143,6 +143,9 @@ api.get("/obtener_insumos_consumibles", authMiddleware._isAuth, factura_controll
 api.post("/obtener_saldo_cliente", authMiddleware._isAuth, factura_controller.obtenerSaldoCliente);
 api.post("/guardar_factura", authMiddleware._isAuth, factura_controller.guardarFactura);
 
+//odontograma
+api.post("/guardarOdontograma", authMiddleware._isAuth, expediente._guardarOdontograma);
+
 
 //estimacion
 api.post("/guardar_estimacion", authMiddleware._isAuth, estimacion_controller.guardarEstimacion);

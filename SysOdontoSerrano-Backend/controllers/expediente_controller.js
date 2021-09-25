@@ -185,6 +185,18 @@ const _ObtenerPiezas = async(req, res) =>{
     res.status(200).send(piezas_consulta);
 }
 
+const _guardarOdontograma=async(req, res)=>{
+try{
+
+    let {listaPiezas, dienteColor, guia, tipoPuente, limpieza, diente, vitalidad, medidaProvisional, notas} = req;
+
+    res.status(200).send({message:"OK"});
+}catch(e)
+{
+
+}
+}
+
 
 
 
@@ -194,6 +206,7 @@ module.exports = {
     _UpdateExpediente,
     _ObtenerExpediente,
     _ObtenerUnExpediente,
-    _ObtenerPiezas
+    _ObtenerPiezas,
+    _guardarOdontograma
 }
 
