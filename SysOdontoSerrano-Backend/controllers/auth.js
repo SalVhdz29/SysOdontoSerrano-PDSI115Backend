@@ -178,7 +178,7 @@ const signIn = async(req, res) =>{
     catch(e)
     {
         console.log(e);
-        res.status(500).send({message:"excepción del servidor."});
+        res.status(500).send({message:"excepción del servidor.", error:e});
 
     }
 }
