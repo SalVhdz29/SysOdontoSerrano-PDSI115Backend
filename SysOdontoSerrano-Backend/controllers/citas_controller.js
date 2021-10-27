@@ -53,7 +53,9 @@ const obtenerCitas= async(req, res)=>{
 
                     let servicio = await Entity.tbl_n_servicio.findByPk(ID_SERVICIO);
 
-                    let { NOMBRE_SERVICIO } = servicio;
+                    let { NOMBRE_SERVICIO, PRECIO_SERVICIO } = servicio;
+                    let precio_serviciox5 = parseFloat(PRECIO_SERVICIO)*5;
+                    precio_serviciox5= parseFloat(precio_serviciox5).toFixed(2);
 
                     let n_cita = {
                         id_cita: ID_SESION,
@@ -62,7 +64,9 @@ const obtenerCitas= async(req, res)=>{
                         hora_salida: HORA_SALIDA,
                         id_servicio: ID_SERVICIO,
                         nombre_servicio: NOMBRE_SERVICIO,
-                        id_expediente: ID_EXPEDIENTE
+                        id_expediente: ID_EXPEDIENTE,
+                        precio_servicio: PRECIO_SERVICIO,
+                        precio_serviciox5
                     }
 
                     citas.push(n_cita)
