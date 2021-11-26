@@ -139,6 +139,8 @@ api.get("/citas_del_dia", authMiddleware._isAuth, citas_controller.obtenerCitas)
 api.post("/guardar_cita", authMiddleware._isAuth, citas_controller.guardarCita);
 api.get("/obtener_servicios",authMiddleware._isAuth, citas_controller.obtenerServicios);
 api.post("/reprogramar_cita", authMiddleware._isAuth, citas_controller.reprogramarCita);
+api.post("/citas_agendadas", authMiddleware._isAuth, citas_controller.obtenerCitasAgendadas);
+api.post("/cancelar_cita", authMiddleware._isAuth, citas_controller.cancelarCita);
 
 //factura
 api.get("/obtener_insumos_consumibles", authMiddleware._isAuth, factura_controller.obtenerInsumosConsumibles);
