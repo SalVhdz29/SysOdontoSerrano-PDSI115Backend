@@ -225,6 +225,170 @@ const resumenCitasPorMes = async(req, res)=>{
     }
 }
 
+const serviciosSolicitadosPorMes = async(req,res)=>{
+    try{
+
+        let lista_servicios=[];
+
+        let servicios = await Entity.tbl_n_servicio.findAll();
+
+        for(let iterador_servicio of servicios){
+            if(iterador_servicio != null){
+
+                let nombre_servicio = iterador_servicio.NOMBRE_SERVICIO;
+
+                let costo_servicio = iterador_servicio.COSTO_SERVICIO;
+
+                let precio_servicio = iterador_servicio.PRECIO_SERVICIO;
+
+                let cotizaciones_servicios = await Entity.tbl_n_cotizacion_servicio.findAll({
+                    where:{
+                        ID_F_SERVICIO: iterador_servicio.ID_SERVICIO
+                    }
+                })
+
+                cotizaciones_servicios = cotizaciones_servicios.length;
+
+                let fecha_hoy = new Date();
+
+                let sesiones_servicio = await Entity.tbl_n_sesion.findAll({
+                    where:{
+                        ID_SERVICIO: iterador_servicio.ID_SERVICIO,
+                        ID_F_ESTADO_SESION: 2
+                    }
+                });
+
+                let contador_citas_servicio = 0;
+                let total_deducible_aplicado = 0, total_margen =0;
+
+                for(let iterador_sesiones of sesiones_servicio){
+                    if(iterador_sesiones != null){
+                        let{
+                            FECHA_SESION
+                        } = iterador_sesiones;
+
+                        let fecha_js = new Date(FECHA_SESION);
+
+                        let mes_js = fecha_js.getMonth();
+
+
+                        if(fecha_hoy.getMonth() == mes_js)
+                        {
+                            contador_citas_servicio++;
+
+                            let pago_sesion = await Entity.tb_n_pago_sesion.findAll({
+                                where:{
+                                    ID_F_SESION: iterador_sesiones.ID_SESION
+                                }
+                            });
+
+
+                            pago_sesion =pago_sesion[0];
+
+                            let transacciones_insumo = await Entity.tbl_n_transaccion_insumo.findAll({
+                                where:{
+                                    ID_F_PAGO_SESION: pago_sesion.ID_PAGO_SESION
+                                }
+                            });
+                            console.log("pase antes for");
+                            let costo_insumos=0, precio_insumos = 0;
+                            let costo = 0, deducible = 0;
+                            console.log("pase esa madre")
+                            console.log("transacciones: ", transacciones_insumo);
+
+                            for(let iterador_transaccion of transacciones_insumo){
+                                if(iterador_transaccion != null){
+                                    console.log("entro")
+        
+                                    let{
+                                        ID_LOTE,
+                                        CANTIDAD_INSUMO
+                                    } = iterador_transaccion
+                                    console.log("antes lote")
+                                    let lote_correspondiente = await Entity.tbl_n_lote.findByPk(ID_LOTE);
+                                    
+        
+                                    let{
+                                        COSTO_LOTE,
+                                        PRECIO_EFECTIVO,
+                                        CANTIDAD_LOTE
+                                    } = lote_correspondiente;
+        
+                                    let costo_unitario = parseFloat(COSTO_LOTE) / parseInt(CANTIDAD_LOTE);
+        
+                                    let precio_unitario = parseFloat(PRECIO_EFECTIVO) / parseInt(CANTIDAD_LOTE);
+        
+                                    let costo_insumo = parseFloat(costo_unitario) * parseInt(CANTIDAD_INSUMO);
+        
+                                    let precio_insumo =parseFloat( precio_unitario * CANTIDAD_INSUMO);
+        
+                                    costo_insumo = parseFloat(parseFloat(costo_insumo).toFixed(2));
+        
+                                    costo_insumos+=costo_insumo;
+        
+                                    precio_insumo = parseFloat(parseFloat(precio_insumo).toFixed(2));
+        
+                                    precio_insumos += precio_insumo;
+        
+                                }
+                            }// end for costo_insumos.
+                            console.log("antes de total_precios: ");
+                            let total_precios = parseFloat(precio_insumos) + parseFloat(iterador_servicio.PRECIO_SERVICIO);
+
+                            costo = parseFloat(costo_insumos) + parseFloat(iterador_servicio.COSTO_SERVICIO);
+                            console.log("antes del if: ");
+
+                            if(total_precios < iterador_sesiones.TOTAL_FACTURA)
+                            {
+                                deducible = parseFloat(total_precios) - parseFloat(iterador_sesiones.TOTAL_FACTURA);
+                            }
+
+                            let margen = parseFloat(iterador_servicio.CANTIDAD_PAGADA) - parseFloat(iterador_servicio.TOTAL_FACTURA);
+
+        
+                            total_margen +=parseFloat(margen)
+
+                            total_deducible_aplicado += parseFloat(deducible);
+
+                        
+
+
+
+                        }// if month
+                    }
+                }
+                if(costo_servicio == null)
+                {
+                    costo_servicio = 0.00;
+                }
+                
+                let n_servicio={
+                    servicio: nombre_servicio,
+                    costo_servicio, 
+                    precio_servicio,
+                    citas_realizado: contador_citas_servicio,
+                    total_deducible_aplicado,
+                    total_margen
+                }
+
+                lista_servicios.push(n_servicio);
+
+
+            }
+
+
+        }
+
+        res.status(200).send(lista_servicios);
+
+    }catch(e)
+    {
+        console.log>("EL ERROR: ==> ",e);
+        res.status(500).send({errorMessage:  "Ha ocurrido un error en el servidor."});
+    }
+}
+
 module.exports={
-    resumenCitasPorMes
+    resumenCitasPorMes,
+    serviciosSolicitadosPorMes
 }

@@ -166,6 +166,7 @@ api.post("/historial_cuenta", authMiddleware._isAuth, cuenta_controller.historia
 
 //REPORTERIA
 api.post("/reporte_citas_mes", reporteria_controller.resumenCitasPorMes);
+api.post("/reporte_servicios_mes", reporteria_controller.serviciosSolicitadosPorMes);
 
 
 module.exports= api;
