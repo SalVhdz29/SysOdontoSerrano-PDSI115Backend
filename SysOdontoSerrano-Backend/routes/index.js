@@ -19,6 +19,7 @@ const estimacion_controller = require("../controllers/estimacion_controller");
 const inventario_controller = require("../controllers/inventario_controller");
 const empleado_controller = require("../controllers/empleado_controller");
 const cuenta_controller = require("../controllers/cuenta_controller");
+const reporteria_controller = require("../controllers/reporteria_controller");
 
 api.post("/expediente",expediente._NuevoExpediente);
 api.post("/update_expediente",expediente._UpdateExpediente);
@@ -162,6 +163,9 @@ api.post("/actualizar_empleado", authMiddleware._isAuth, empleado_controller.act
 //CUENTA
 api.post("/obtener_monitoreo_cuenta", authMiddleware._isAuth, cuenta_controller.obtener_cuentas_pacientes);
 api.post("/historial_cuenta", authMiddleware._isAuth, cuenta_controller.historial_cuenta);
+
+//REPORTERIA
+api.post("/reporte_citas_mes", reporteria_controller.resumenCitasPorMes);
 
 
 module.exports= api;
