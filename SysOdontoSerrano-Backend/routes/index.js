@@ -17,6 +17,8 @@ const recurso_controller = require("../controllers/recurso_controller");
 const servicio_controller= require("../controllers/servicio_controller");
 const estimacion_controller = require("../controllers/estimacion_controller");
 const inventario_controller = require("../controllers/inventario_controller");
+const empleado_controller = require("../controllers/empleado_controller");
+const cuenta_controller = require("../controllers/cuenta_controller");
 
 api.post("/expediente",expediente._NuevoExpediente);
 api.post("/update_expediente",expediente._UpdateExpediente);
@@ -149,6 +151,20 @@ api.post("/guardarOdontograma", authMiddleware._isAuth, expediente._guardarOdont
 
 //estimacion
 api.post("/guardar_estimacion", authMiddleware._isAuth, estimacion_controller.guardarEstimacion);
+//EMPLEADO-CONTROLLER
+api.post("/obtener_empleados_todos",authMiddleware._isAuth, empleado_controller.obtener_empleados_todos);
+api.post("/cambiar_estado_empleado", authMiddleware._isAuth, empleado_controller.cambiar_estado_empleado);
+api.post("/guardar_empleado", authMiddleware._isAuth, empleado_controller.guardar_nuevo_empleado);
+api.post("/actualizar_empleado", authMiddleware._isAuth, empleado_controller.actualizar_datos_empleado);
+
+//CUENTA
+api.post("/obtener_monitoreo_cuenta", authMiddleware._isAuth, cuenta_controller.obtener_cuentas_pacientes);
+api.post("/historial_cuenta", authMiddleware._isAuth, cuenta_controller.historial_cuenta);
+
+
 module.exports= api;
+
+
+
 
 
