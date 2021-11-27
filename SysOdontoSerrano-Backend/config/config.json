@@ -1,7 +1,7 @@
 {
   "development": {
-    "username": "root",
-    "password": "",
+    "username": "admin", 
+    "password": "5102b9c06f8949bc34304439a93a85a6e4b974ca52a83fb7", 
     "database": "bd_odontoserrano_dsi_s2",
     "port":"3306",
     "host": "127.0.0.1",
@@ -9,16 +9,16 @@
   },
   "test": {
     "username": "admin",
-    "password": "e71422e29840c1f226a17bd0afcd1870b10d7db54894ec03",
-    "database": "bd_odontoserrano_dsi",
+    "password": "5102b9c06f8949bc34304439a93a85a6e4b974ca52a83fb7", 
+    "database": "bd_odontoserrano_dsi_s2",
     "port":"3306",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "production": {
     "username": "admin",
-    "password": "e71422e29840c1f226a17bd0afcd1870b10d7db54894ec03",
-    "database": "bd_odontoserrano_dsi",
+    "password": "e71422e29840c1f226a17bd0afcd1870b10d7db54894ec03", 
+    "database": "bd_odontoserrano_dsi", 
     "port":"3306",
     "host": "127.0.0.1",
     "dialect": "mysql"
