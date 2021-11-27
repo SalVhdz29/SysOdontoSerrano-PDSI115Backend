@@ -27,10 +27,8 @@ const _NuevoExpediente = async(req, res) =>{
     var fecha = req.body.ultima_fecha;
 
     fecha= DateTime.fromJSDate(fecha)
-    fecha_nacimiento = DateTime.fromJSDate(fecha_nacimiento)
+    //fecha_nacimiento = DateTime.fromJSDate(fecha_nacimiento)
 
-    try{
-    
 
     let persona = await Entity.tbl_n_persona.create({
 
@@ -66,11 +64,7 @@ const _NuevoExpediente = async(req, res) =>{
 
 
     res.status(200).send({message:"Se guardo expediente"});
-}
-catch(e)
-{
-    console.log("error al crear expediente: ", e)
-}
+
 }
 const _UpdateExpediente = async(req, res) =>{
 
@@ -78,7 +72,7 @@ const _UpdateExpediente = async(req, res) =>{
      //var contacto = req.body.telefono;
      var direccion = req.body.direccion;
      var id_exp = req.body.id_expediente;
-     var { nombre_paciente, correo, direccion, apellido_paciente, id_expediente, telefono} = req.body;
+     var { nombre_paciente, correo, direccion, apellido_paciente, id_expediente, telefono, dui, fecha_nacimiento} = req.body;
     
       
     let expediente_con = await Entity.tbl_n_expediente.findByPk(id_expediente);
@@ -106,17 +100,22 @@ const _UpdateExpediente = async(req, res) =>{
   
     let paciente = await Entity.tbl_n_paciente.update(
         {
-        CORREO_ELECTRONICO_PACIENTE: correo,
+        CORREO_ELECTRONICO_PACIENTE: correo
+        
       
         },{
         where:{
         ID_PACIENTE: id_paciente
     }});
 
+
+
+
     let persona_r = await Entity.tbl_n_persona.update(
         {
             NOMBRE_PERSONA: nombre_paciente,
-            APELLIDO_PERSONA: apellido_paciente
+            APELLIDO_PERSONA: apellido_paciente,
+            FECHA_NACIMIENTO: fecha_nacimiento
         },
         {
             where:{
@@ -126,12 +125,14 @@ const _UpdateExpediente = async(req, res) =>{
 
         let detalle_persona = await Entity.tbl_n_detalle_persona.update({
             NUMERO_DE_CONTACTO: telefono,
-            DIRECCION: direccion
+            DIRECCION: direccion,
+            DUI: dui
         },{
         where:{
             ID_DETALLE_PERSONA: id_detalle
         }});
 
+        
     res.status(200).send({message:"Actualicion completada del servidor"});
 }
 const _ObtenerExpediente = async(req, res) =>{

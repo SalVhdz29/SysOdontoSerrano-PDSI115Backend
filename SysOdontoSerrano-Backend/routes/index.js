@@ -17,6 +17,9 @@ const recurso_controller = require("../controllers/recurso_controller");
 const servicio_controller= require("../controllers/servicio_controller");
 const estimacion_controller = require("../controllers/estimacion_controller");
 const inventario_controller = require("../controllers/inventario_controller");
+const empleado_controller = require("../controllers/empleado_controller");
+const cuenta_controller = require("../controllers/cuenta_controller");
+const reporteria_controller = require("../controllers/reporteria_controller");
 
 api.post("/expediente",expediente._NuevoExpediente);
 api.post("/update_expediente",expediente._UpdateExpediente);
@@ -137,6 +140,8 @@ api.get("/citas_del_dia", authMiddleware._isAuth, citas_controller.obtenerCitas)
 api.post("/guardar_cita", authMiddleware._isAuth, citas_controller.guardarCita);
 api.get("/obtener_servicios",authMiddleware._isAuth, citas_controller.obtenerServicios);
 api.post("/reprogramar_cita", authMiddleware._isAuth, citas_controller.reprogramarCita);
+api.post("/citas_agendadas", authMiddleware._isAuth, citas_controller.obtenerCitasAgendadas);
+api.post("/cancelar_cita", authMiddleware._isAuth, citas_controller.cancelarCita);
 
 //factura
 api.get("/obtener_insumos_consumibles", authMiddleware._isAuth, factura_controller.obtenerInsumosConsumibles);
@@ -149,6 +154,25 @@ api.post("/guardarOdontograma", authMiddleware._isAuth, expediente._guardarOdont
 
 //estimacion
 api.post("/guardar_estimacion", authMiddleware._isAuth, estimacion_controller.guardarEstimacion);
+//EMPLEADO-CONTROLLER
+api.post("/obtener_empleados_todos",authMiddleware._isAuth, empleado_controller.obtener_empleados_todos);
+api.post("/cambiar_estado_empleado", authMiddleware._isAuth, empleado_controller.cambiar_estado_empleado);
+api.post("/guardar_empleado", authMiddleware._isAuth, empleado_controller.guardar_nuevo_empleado);
+api.post("/actualizar_empleado", authMiddleware._isAuth, empleado_controller.actualizar_datos_empleado);
+
+//CUENTA
+api.post("/obtener_monitoreo_cuenta", authMiddleware._isAuth, cuenta_controller.obtener_cuentas_pacientes);
+api.post("/historial_cuenta", authMiddleware._isAuth, cuenta_controller.historial_cuenta);
+
+//REPORTERIA
+api.post("/reporte_citas_mes", reporteria_controller.resumenCitasPorMes);
+api.post("/reporte_servicios_mes", reporteria_controller.serviciosSolicitadosPorMes);
+api.post("/reporte_inventario", reporteria_controller.inventariosInsumoTotalidad);
+
+
 module.exports= api;
+
+
+
 
 

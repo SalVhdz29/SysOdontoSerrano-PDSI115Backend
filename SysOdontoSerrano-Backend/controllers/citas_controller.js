@@ -53,7 +53,9 @@ const obtenerCitas= async(req, res)=>{
 
                     let servicio = await Entity.tbl_n_servicio.findByPk(ID_SERVICIO);
 
-                    let { NOMBRE_SERVICIO } = servicio;
+                    let { NOMBRE_SERVICIO, PRECIO_SERVICIO } = servicio;
+                    let precio_serviciox5 = parseFloat(PRECIO_SERVICIO)*5;
+                    precio_serviciox5= parseFloat(precio_serviciox5).toFixed(2);
 
                     let n_cita = {
                         id_cita: ID_SESION,
@@ -62,7 +64,9 @@ const obtenerCitas= async(req, res)=>{
                         hora_salida: HORA_SALIDA,
                         id_servicio: ID_SERVICIO,
                         nombre_servicio: NOMBRE_SERVICIO,
-                        id_expediente: ID_EXPEDIENTE
+                        id_expediente: ID_EXPEDIENTE,
+                        precio_servicio: PRECIO_SERVICIO,
+                        precio_serviciox5
                     }
 
                     citas.push(n_cita)
@@ -184,9 +188,135 @@ const obtenerServicios =async(req, res)=>{
         res.status(500).send({errorMessage:  "Ha ocurrido un error en el servidor."});
     }
 }
+
+const obtenerCitasAgendadas =async(req,res)=>{
+    try{
+
+        let citas = []
+
+        let lista_citas =[]
+
+        citas = await Entity.tbl_n_sesion.findAll({
+           where:{
+               ID_F_ESTADO_SESION: 1,
+           }
+       });
+
+
+       for(let it of citas)
+       {
+           if(it != null)
+           {
+
+              let{
+                       ID_SESION,
+                       ID_EXPEDIENTE,
+                       ID_SERVICIO,
+                       HORA_ENTRADA,
+                       HORA_SALIDA,
+                       DETALLES_SESION,
+                       FECHA_SESION
+                   } = it;
+
+                   let expediente = await Entity.tbl_n_expediente.findByPk(ID_EXPEDIENTE);
+
+                   let { ID_PACIENTE } = expediente;
+
+                   let paciente = await Entity.tbl_n_paciente.findByPk(ID_PACIENTE);
+
+                   let { ID_PERSONA } = paciente;
+
+                   let persona = await Entity.tbl_n_persona.findByPk(ID_PERSONA);
+
+                   let { NOMBRE_PERSONA, APELLIDO_PERSONA } = persona;
+
+                   let detalle_persona = await Entity.tbl_n_detalle_persona.findAll({
+                       where:{
+                           ID_PERSONA: ID_PERSONA
+                       }
+                   });
+
+                   detalle_persona = detalle_persona[0];
+
+                   let numero_de_contacto = detalle_persona.NUMERO_DE_CONTACTO;
+
+                   let servicio = await Entity.tbl_n_servicio.findByPk(ID_SERVICIO);
+
+                   let { NOMBRE_SERVICIO, PRECIO_SERVICIO } = servicio;
+                   let precio_serviciox5 = parseFloat(PRECIO_SERVICIO)*5;
+                   precio_serviciox5= parseFloat(precio_serviciox5).toFixed(2);
+
+                   let detalles_sesion = DETALLES_SESION;
+
+                   let cuenta = await Entity.tbl_n_saldo.findAll({
+                       where:{
+                           ID_F_EXPEDIENTE: ID_EXPEDIENTE
+                       }
+                   });
+
+                   cuenta = cuenta[0];
+
+                   let saldo = cuenta.SALDO;
+
+                   let n_cita = {
+                       id_cita: ID_SESION,
+                       nombre_persona: NOMBRE_PERSONA + " " + APELLIDO_PERSONA,
+                       hora_entrada: HORA_ENTRADA,
+                       hora_salida: HORA_SALIDA,
+                       id_servicio: ID_SERVICIO,
+                       nombre_servicio: NOMBRE_SERVICIO,
+                       id_expediente: ID_EXPEDIENTE,
+                       precio_servicio: PRECIO_SERVICIO,
+                       precio_serviciox5,
+                       detalles_sesion,
+                       numero_de_contacto,
+                       saldo, fecha_sesion: FECHA_SESION
+
+                   }
+
+                   lista_citas.push(n_cita)
+               }
+       }
+       console.log("A ENVIAR: ", lista_citas)
+       res.status(200).send(lista_citas);
+
+
+
+    }catch(e)
+    {
+        console.log>("EL ERROR: ==> ",e);
+        res.status(500).send({errorMessage:  "Ha ocurrido un error en el servidor."});
+    }
+}
+
+const cancelarCita =async(req, res)=>{
+    try{
+
+        let{id_sesion} = req.body;
+
+        let estado_cancelada = await Entity.tbl_n_estado_sesion.findByPk(4);
+
+        let cita_cancelada = await Entity.tbl_n_sesion.update({
+            ID_F_ESTADO_SESION: estado_cancelada.ID_ESTADO_SESION
+        },{
+            where:{
+                ID_SESION: id_sesion
+            }
+        });
+
+        res.status(200).send({message:"OK"});
+
+    }catch(e)
+    {
+        console.log>("EL ERROR: ==> ",e);
+        res.status(500).send({errorMessage:  "Ha ocurrido un error en el servidor."});
+    }
+}
 module.exports={
     obtenerCitas,
     guardarCita,
     obtenerServicios,
     reprogramarCita,
+    obtenerCitasAgendadas,
+    cancelarCita
 }
