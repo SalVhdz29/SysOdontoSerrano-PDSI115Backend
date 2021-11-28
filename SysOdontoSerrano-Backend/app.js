@@ -39,6 +39,6 @@ app.use(function (req, res, next) {
     next();
 });
 
-app.use("/", api); // en producción quitar el /api.
+app.use("/", api); // en producción quitar el api.
 
 module.exports = app
