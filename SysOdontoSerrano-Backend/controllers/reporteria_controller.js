@@ -133,9 +133,11 @@ const resumenCitasPorMes = async(req, res)=>{
                             let precio_unitario = parseFloat(PRECIO_EFECTIVO) / parseInt(CANTIDAD_LOTE);
 
                             let costo_insumo = parseFloat(costo_unitario) * parseInt(CANTIDAD_INSUMO);
-
-                            let precio_insumo =parseFloat( precio_unitario * CANTIDAD_INSUMO);
-
+                            console.log("precio_untario: ", precio_unitario)
+                            console.log("CANTIDAD INSUMO", CANTIDAD_INSUMO)
+                            console.log("ID_LOTE")
+                            let precio_insumo =parseFloat( precio_unitario) * parseInt(CANTIDAD_INSUMO);
+                            console.log("precio_insumo: ", precio_insumo)
                             costo_insumo = parseFloat(parseFloat(costo_insumo).toFixed(2));
 
                             costo_insumos+=costo_insumo;
@@ -155,17 +157,19 @@ const resumenCitasPorMes = async(req, res)=>{
                         PRECIO_SERVICIO
                     } = servicio_sesion;
 
-
+                    console.log("precio_INSUMOS", precio_insumos)
                     let total_precios = parseFloat(precio_insumos) + parseFloat(PRECIO_SERVICIO);
 
                     costo = parseFloat(costo_insumos) + parseFloat(COSTO_SERVICIO);
+                    console.log("TOTAL PRECIOS: ", total_precios)
 
-                    if(total_precios < TOTAL_FACTURA)
+                    if(parseFloat(total_precios) > parseFloat(TOTAL_FACTURA))
                     {
+                        console.log("IFA")
                         deducible = parseFloat(total_precios) - parseFloat(TOTAL_FACTURA);
                     }
 
-                    let margen = parseFloat(CANTIDAD_PAGADA) - parseFloat(TOTAL_FACTURA);
+                    let margen = parseFloat(CANTIDAD_PAGADA) - parseFloat(costo);
 
 
                     total_costo +=parseFloat(costo);
@@ -193,6 +197,11 @@ const resumenCitasPorMes = async(req, res)=>{
                     deducible = parseFloat(deducible).toFixed(2)
                     costo = parseFloat(costo).toFixed(2)
                     margen = parseFloat(margen).toFixed(2)
+
+                    console.log("CITA: ", ID_SESION)
+                    console.log("COSTO: ", costo)
+                    console.log("DEDUCIBLE: ", deducible)
+                    console.log("MARGEN: ",margen)
 
                     let n_cita={
                         id_cita: ID_SESION,
@@ -327,7 +336,7 @@ const serviciosSolicitadosPorMes = async(req,res)=>{
         
                                     let costo_insumo = parseFloat(costo_unitario) * parseInt(CANTIDAD_INSUMO);
         
-                                    let precio_insumo =parseFloat( precio_unitario * CANTIDAD_INSUMO);
+                                    let precio_insumo =parseFloat( precio_unitario) * parseInt(CANTIDAD_INSUMO);
         
                                     costo_insumo = parseFloat(parseFloat(costo_insumo).toFixed(2));
         
@@ -343,14 +352,14 @@ const serviciosSolicitadosPorMes = async(req,res)=>{
                             let total_precios = parseFloat(precio_insumos) + parseFloat(iterador_servicio.PRECIO_SERVICIO);
 
                             costo = parseFloat(costo_insumos) + parseFloat(iterador_servicio.COSTO_SERVICIO);
-                            console.log("antes del if: ");
+                            console.log("antes del if: ",total_precios);
 
-                            if(total_precios < pago_sesion.TOTAL_FACTURA)
+                            if(parseFloat(total_precios) > parseFloat(pago_sesion.TOTAL_FACTURA))
                             {
                                 deducible = parseFloat(total_precios) - parseFloat(pago_sesion.TOTAL_FACTURA);
                             }
-                            console.log("ITERADOR: ", iterador_sesiones.ID_SESION)
-                            let margen = parseFloat(pago_sesion.CANTIDAD_PAGADA) - parseFloat(pago_sesion.TOTAL_FACTURA);
+                            console.log("ITERADOR SSSS: ", iterador_sesiones.ID_SESION)
+                            let margen = parseFloat(pago_sesion.CANTIDAD_PAGADA) - parseFloat(costo);
 
                             console.log("DEDUCIBLE: ", deducible)
                             console.log("MARGEN: ", margen)
